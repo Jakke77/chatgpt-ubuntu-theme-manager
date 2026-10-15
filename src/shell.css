@@ -1,0 +1,22 @@
+/* Hiili accents over the Ubuntu 26.10 / GNOME 51 shell stylesheet. */
+stage { -st-accent-color: #476b73; -st-accent-fg-color: #f1f5f6; color: #e3e8ec; }
+#panel { background-color: rgba(8, 11, 15, 0.96); color: #dbe3ea; box-shadow: 0 1px rgba(134, 156, 174, 0.12); }
+#panel .panel-button:hover, #panel .panel-button:active, #panel .panel-button:checked { background-color: #29343f; color: #f2f5f7; }
+.popup-menu-content, .quick-settings { background-color: #171d24; color: #e3e8ec; border: 1px solid #343e49; border-radius: 20px; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.48); }
+.popup-menu-item:focus, .popup-menu-item:hover, .popup-menu-item:selected { background-color: #303c48; color: #edf2f6; }
+.quick-toggle { background-color: #28323e; color: #dce4ea; }
+.quick-toggle:checked { background-color: #3d5e67; color: #f3f6f6; }
+.quick-toggle:hover { background-color: #34424e; }
+.quick-toggle:checked:hover { background-color: #4a6e76; }
+.quick-slider .icon-button, .icon-button { background-color: #28323e; color: #dce4ea; }
+.slider { -barlevel-background-color: #303c47; -barlevel-active-background-color: #7da7aa; -barlevel-overdrive-color: #a27889; }
+.toggle-switch:checked { background-color: #476b73; }
+.message, .message-list .message, .calendar, .world-clocks-button, .weather-button, .events-button { background-color: #1b222b; color: #dfe6ec; border-color: #303b47; }
+.calendar .calendar-day.calendar-today { background-color: #3d5e67; color: #f1f5f6; }
+.modal-dialog, .osd-window, .switcher-list { background-color: #171d24; color: #e3e8ec; border: 1px solid #36414d; }
+.search-entry { background-color: #1c2530; color: #e3e8ec; border-color: #405360; }
+.search-entry:focus { border-color: #779fa4; }
+#dashtodockContainer .dash-background, #dash .dash-background { background-color: rgba(15, 20, 27, 0.94); border: 1px solid rgba(144, 168, 188, 0.18); border-radius: 22px; }
+.app-well-app:hover .overview-icon, .show-apps:hover .overview-icon { background-color: #293541; }
+.workspace-thumbnail-indicator { border-color: #779fa4; }
+

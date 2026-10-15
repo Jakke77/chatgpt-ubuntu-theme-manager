@@ -1,0 +1,346 @@
+#!/usr/bin/python3
+"""Hiili appearance control, CLI for package hooks and a small GTK interface."""
+import argparse
+import json
+from pathlib import Path
+import sys
+
+LIB = Path(__file__).resolve().parent
+sys.path.insert(0, "/usr/lib/hiili-theme")
+sys.path.insert(0, str(LIB))
+import engine
+from palettes import APP_NAME, VERSION, all_palettes, palette
+from theme_packs import import_theme as import_theme_pack
+from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url, system_target
+
+
+def gui():
+    import gi
+    gi.require_version("Gtk", "4.0")
+    gi.require_version("Adw", "1")
+    from gi.repository import Adw, Gio, GLib, Gtk, Gdk
+    import threading
+
+    class Application(Adw.Application):
+        def __init__(self):
+            super().__init__(application_id="fi.hiili.Theme", flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+            self.window = None
+
+        def do_activate(self):
+            if self.window:
+                self.window.present()
+                return
+            Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+            initial = engine.status()
+            self.selected = initial["variant"]
+            self.palette_provider = None
+            style = Gtk.CssProvider()
+            style.load_from_data(b".hiili-title { font-size: 27px; font-weight: 750; letter-spacing: -0.5px; } .hiili-tag { background: alpha(var(--accent-bg-color),0.45); color: var(--accent-color); padding: 6px 12px; border-radius: 30px; } .hiili-footer { color: #9aa5b2; font-size: 12px; } .hiili-swatch { border: 1px solid alpha(white,0.14); border-radius: 10px; } .theme-choice { padding: 7px; border-radius: 13px; } .theme-choice:checked { outline: 2px solid var(--accent-color); outline-offset: -2px; } .hiili-actions button { min-height: 38px; }")
+            Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), style, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+            self.window = Adw.ApplicationWindow(application=self, title=APP_NAME, default_width=800, default_height=980)
+            toolbar = Adw.ToolbarView()
+            header = Adw.HeaderBar()
+            about = Gtk.Button.new_from_icon_name("help-about-symbolic")
+            about.set_tooltip_text("Tietoja ohjelmasta")
+            about.connect("clicked", lambda *_: self.show_about())
+            header.pack_end(about)
+            toolbar.add_top_bar(header)
+            self.window.set_content(toolbar)
+            scroller = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+            toolbar.set_content(scroller)
+            clamp = Adw.Clamp(maximum_size=720, tightening_threshold=620)
+            scroller.set_child(clamp)
+            body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16, margin_start=30, margin_end=30, margin_top=12, margin_bottom=18)
+            clamp.set_child(body)
+            hero = Gtk.Box(spacing=20)
+            logo = Gtk.Image.new_from_file(str(engine.DATA / "hiili-logo.svg"))
+            logo.set_pixel_size(72)
+            hero.append(logo)
+            text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5, valign=Gtk.Align.CENTER)
+            title = Gtk.Label(label="ChatGPT Ubuntu\nTheme Manager", xalign=0)
+            title.add_css_class("hiili-title")
+            text.append(title)
+            text.append(Gtk.Label(label="Tummat teemat ja omat värimaailmat Ubuntulle", xalign=0))
+            hero.append(text)
+            body.append(hero)
+            self.badge = Gtk.Label(halign=Gtk.Align.START)
+            self.badge.add_css_class("hiili-tag")
+            body.append(self.badge)
+
+            heading_row = Gtk.Box(spacing=12)
+            heading = Gtk.Label(label="Valitse ulkoasu", xalign=0, hexpand=True)
+            heading.add_css_class("heading")
+            heading_row.append(heading)
+            self.import_button = Gtk.Button(label="Tuo teema…")
+            self.import_button.set_tooltip_text("Lisää ChatGPT:n tekemä .ctm-theme.zip tai .json omaan valikoimaan")
+            self.import_button.connect("clicked", lambda *_: self.open_import())
+            heading_row.append(self.import_button)
+            body.append(heading_row)
+            self.swatches = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, homogeneous=True,
+                                         column_spacing=6, row_spacing=6,
+                                         min_children_per_line=3, max_children_per_line=5)
+            self.swatch_provider = None
+            self.reload_themes()
+            body.append(self.swatches)
+
+            group = Adw.PreferencesGroup()
+            self.summary = Adw.ActionRow(title="Ikkunat, valikot ja kuvakkeet")
+            self.summary.add_prefix(Gtk.Image.new_from_icon_name("preferences-desktop-appearance-symbolic"))
+            group.add(self.summary)
+            self.wallpaper = Adw.SwitchRow(title="Vaihda myös taustakuva", subtitle="Valittuun värimaailmaan sopiva tumma taustakuva", active=not initial["active"])
+            group.add(self.wallpaper)
+            body.append(group)
+
+            icon_row = Gtk.Box(spacing=16, halign=Gtk.Align.CENTER)
+            self.preview_icons = {}
+            icon_root = engine.variant_data(self.selected) / "icon-preview"
+            for name in ("folder", "browser", "terminal", "files", "settings", "music", "code"):
+                picture = Gtk.Image.new_from_file(str(icon_root / f"{name}.svg"))
+                picture.set_pixel_size(52)
+                self.preview_icons[name] = picture
+                icon_row.append(picture)
+            body.append(icon_row)
+            actions = Gtk.Box(spacing=12, homogeneous=True)
+            actions.add_css_class("hiili-actions")
+            self.apply_button = Gtk.Button(label="Ota valittu teema käyttöön")
+            self.apply_button.add_css_class("suggested-action")
+            self.apply_button.connect("clicked", lambda *_: self.perform("apply"))
+            actions.append(self.apply_button)
+            self.restore_button = Gtk.Button(label="Palauta aiempi ulkoasu")
+            self.restore_button.connect("clicked", lambda *_: self.perform("restore"))
+            actions.append(self.restore_button)
+            body.append(actions)
+
+            create = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+            prompt_choices = Gtk.StringList.new([value[0] for value in PROMPTS.values()])
+            self.prompt_choice = Adw.ComboRow(title="ChatGPT:n aloitusprompti", model=prompt_choices)
+            prompt_group = Adw.PreferencesGroup()
+            prompt_group.add(self.prompt_choice)
+            self.prompt_target = Adw.EntryRow(title="Teeman kohdejärjestelmä", text=system_target())
+            self.prompt_target.set_tooltip_text("Voit kirjoittaa toisen Ubuntu- ja GNOME-version. Tämä ei muuta managerin yhteensopivuutta.")
+            prompt_group.add(self.prompt_target)
+            create.append(prompt_group)
+            launch_row = Gtk.Box(spacing=10)
+            self.chatgpt_button = Gtk.Button(label="Tee uusia teemoja ChatGPT:llä", hexpand=True)
+            self.chatgpt_button.connect("clicked", lambda *_: self.launch_chatgpt())
+            launch_row.append(self.chatgpt_button)
+            copy = Gtk.Button.new_from_icon_name("edit-copy-symbolic")
+            copy.set_tooltip_text("Kopioi aloitusprompti avaamatta selainta")
+            copy.connect("clicked", lambda *_: self.copy_prompt())
+            launch_row.append(copy)
+            create.append(launch_row)
+            hint = Gtk.Label(label="ChatGPT kysyy toiveesi. Lataa valmis teematiedosto ja lisää se Tuo teema -painikkeella.", wrap=True)
+            hint.add_css_class("hiili-footer")
+            create.append(hint)
+            body.append(create)
+            self.info = Gtk.Label(label="Aiempi ulkoasu tallennetaan ensimmäisellä käyttöönotolla.", wrap=True, justify=Gtk.Justification.CENTER)
+            self.info.add_css_class("hiili-footer")
+            body.append(self.info)
+            footer = Gtk.Label(label=f"Versio {VERSION} · Sulje ja avaa sovellukset, jotta kaikki värit päivittyvät.", wrap=True, justify=Gtk.Justification.CENTER)
+            footer.add_css_class("hiili-footer")
+            body.append(footer)
+            self.theme_buttons[self.selected].set_active(True)
+            self.refresh()
+            self.window.present()
+
+        def reload_themes(self):
+            self.catalog = all_palettes()
+            self.swatches.remove_all()
+            if self.swatch_provider:
+                Gtk.StyleContext.remove_provider_for_display(Gdk.Display.get_default(), self.swatch_provider)
+            self.theme_buttons = {}
+            first = None
+            rules = []
+            for index, (key, selected) in enumerate(self.catalog.items()):
+                block = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=7)
+                sample = Gtk.Box(height_request=32)
+                sample.add_css_class("hiili-swatch")
+                sample.add_css_class(f"sample-{index}")
+                rules.append(f".sample-{index} {{ background-color: {selected['sample']}; }}")
+                block.append(sample)
+                label = Gtk.Label(label=selected["name"], xalign=0, ellipsize=3, max_width_chars=16)
+                label.add_css_class("caption")
+                block.append(label)
+                button = Gtk.ToggleButton()
+                button.add_css_class("theme-choice")
+                button.set_child(block)
+                details = selected["description"]
+                if selected.get("imported"):
+                    details += "\nOma teema · " + selected.get("target", "")
+                button.set_tooltip_text(details)
+                if first:
+                    button.set_group(first)
+                else:
+                    first = button
+                button.connect("toggled", self.choose_theme, key)
+                self.theme_buttons[key] = button
+                self.swatches.append(button)
+            self.swatch_provider = Gtk.CssProvider()
+            self.swatch_provider.load_from_data("\n".join(rules).encode())
+            Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), self.swatch_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+        def import_from_path(self, path):
+            key, selected = import_theme_pack(path)
+            self.reload_themes()
+            self.theme_buttons[key].set_active(True)
+            self.info.set_label(selected["name"] + " lisättiin valikoimaan. Ota se käyttöön yllä olevalla painikkeella.")
+            return key
+
+        def open_import(self):
+            filters = Gio.ListStore.new(Gtk.FileFilter)
+            supported = Gtk.FileFilter(name="Managerin teemat (.ctm-theme.zip, .json)")
+            supported.add_pattern("*.zip")
+            supported.add_pattern("*.json")
+            filters.append(supported)
+            dialog = Gtk.FileDialog(title="Tuo teema manageriin", filters=filters, default_filter=supported)
+            def selected_file(chooser, result):
+                try:
+                    file = chooser.open_finish(result)
+                    if file:
+                        self.import_from_path(file.get_path())
+                except GLib.Error as error:
+                    if error.matches(Gtk.DialogError.quark(), Gtk.DialogError.DISMISSED):
+                        return
+                    self.import_error(str(error))
+                except Exception as error:
+                    self.import_error(str(error))
+            dialog.open(self.window, None, selected_file)
+
+        def import_error(self, message):
+            dialog = Adw.AlertDialog(heading="Teemaa ei voitu tuoda", body=message)
+            dialog.add_response("close", "Sulje")
+            dialog.present(self.window)
+
+        def choose_theme(self, button, key):
+            if not button.get_active():
+                return
+            self.selected = key
+            if not hasattr(self, "summary"):
+                return
+            display = Gdk.Display.get_default()
+            if self.palette_provider:
+                Gtk.StyleContext.remove_provider_for_display(display, self.palette_provider)
+            self.palette_provider = Gtk.CssProvider()
+            self.palette_provider.load_from_path(str(engine.variant_data(key) / "gtk4.css"))
+            Gtk.StyleContext.add_provider_for_display(display, self.palette_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+            selected = palette(key)
+            detail = selected["description"]
+            if selected.get("imported"):
+                detail += " · Oma teema"
+            self.summary.set_subtitle(detail)
+            for name, image in self.preview_icons.items():
+                image.set_from_file(str(engine.variant_data(key) / "icon-preview" / (name + ".svg")))
+
+        def selected_prompt(self):
+            return list(PROMPTS)[self.prompt_choice.get_selected()]
+
+        def copy_prompt(self):
+            kind = self.selected_prompt()
+            Gdk.Display.get_default().get_clipboard().set(build_prompt(kind, self.prompt_target.get_text()))
+            self.info.set_label("Aloitusprompti kopioitiin. Voit liittää sen ChatGPT:hen komennolla Ctrl+V.")
+            return kind
+
+        def launch_chatgpt(self):
+            kind = self.copy_prompt()
+            try:
+                if not Gio.AppInfo.launch_default_for_uri(chatgpt_url(kind, self.prompt_target.get_text()), None):
+                    raise RuntimeError("Oletusselain ei avautunut.")
+                self.info.set_label("ChatGPT avataan selaimeen. Lähetä aloitusprompti; tarvittaessa liitä se ensin Ctrl+V.")
+            except Exception as error:
+                dialog = Adw.AlertDialog(heading="Selainta ei voitu avata", body=f"Prompti on leikepöydällä. Avaa chatgpt.com ja liitä se keskusteluun.\n\n{error}")
+                dialog.add_response("close", "Sulje")
+                dialog.present(self.window)
+
+        def show_about(self):
+            dialog = Adw.AboutDialog(application_name=APP_NAME, application_icon="fi.hiili.Theme", version=VERSION,
+                                     developer_name="Yhteisöprojekti", license_type=Gtk.License.GPL_3_0,
+                                     comments="Tummien palettiteemojen hallinta Ubuntu / GNOME -työpöydälle. Testattu Ubuntu 26.10:ssä.\n\nEpävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote. ChatGPT avataan omassa selaimessasi.")
+            dialog.present(self.window)
+            return dialog
+
+        def refresh(self):
+            current = engine.status()
+            self.badge.set_label(palette(current["variant"])["name"] + " käytössä" if current["active"] else "Valmis käyttöön")
+            self.restore_button.set_sensitive(current["backup_available"])
+
+        def perform(self, action):
+            self.apply_button.set_sensitive(False)
+            self.restore_button.set_sensitive(False)
+            self.info.set_label("Päivitetään ulkoasua…")
+            wallpaper = self.wallpaper.get_active()
+            variant = self.selected
+
+            def work():
+                try:
+                    result = engine.apply(wallpaper, variant) if action == "apply" else engine.restore()
+                    GLib.idle_add(finished, None, result)
+                except Exception as error:
+                    GLib.idle_add(finished, str(error), None)
+
+            def finished(error, result):
+                self.apply_button.set_sensitive(True)
+                self.refresh()
+                if error:
+                    self.info.set_label("Muutos ei onnistunut. Aiempi ulkoasu säilytettiin.")
+                    dialog = Adw.AlertDialog(heading="Ulkoasun vaihtaminen ei onnistunut", body=error)
+                    dialog.add_response("close", "Sulje")
+                    dialog.present(self.window)
+                else:
+                    message = palette(variant)["name"] + " otettiin käyttöön." if action == "apply" else "Aiempi ulkoasu palautettiin."
+                    if action == "restore" and result:
+                        message += " Myöhemmin muokatut asetustiedostot säilytettiin."
+                    self.info.set_label(message)
+                return False
+
+            threading.Thread(target=work, daemon=True).start()
+
+    return Application().run([sys.argv[0]])
+
+
+def main():
+    parser = argparse.ArgumentParser(description=APP_NAME)
+    actions = parser.add_mutually_exclusive_group()
+    actions.add_argument("--apply", action="store_true")
+    actions.add_argument("--restore", action="store_true")
+    actions.add_argument("--status-json", action="store_true")
+    actions.add_argument("--import-theme", metavar="TIEDOSTO")
+    actions.add_argument("--list-themes", action="store_true")
+    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--no-wallpaper", action="store_true")
+    parser.add_argument("--variant", choices=tuple(all_palettes()), default="hiili")
+    parser.add_argument("--print-prompt", choices=tuple(PROMPTS))
+    parser.add_argument("--prompt-target", help="Esimerkiksi Ubuntu 26.04 / GNOME")
+    args = parser.parse_args()
+    try:
+        if args.print_prompt:
+            print(build_prompt(args.print_prompt, args.prompt_target))
+            return 0
+        if args.import_theme:
+            key, selected = import_theme_pack(args.import_theme)
+            print(json.dumps({"variant": key, "name": selected["name"]}, ensure_ascii=False))
+            return 0
+        if args.list_themes:
+            print(json.dumps(all_palettes(), ensure_ascii=False, indent=2))
+            return 0
+        if args.apply:
+            current = engine.apply(not args.no_wallpaper, args.variant)
+            if not args.quiet:
+                print(json.dumps(current, ensure_ascii=False))
+            return 0
+        if args.restore:
+            warnings = engine.restore()
+            if not args.quiet:
+                print("Aiempi ulkoasu palautettiin.")
+                print("\n".join(warnings))
+            return 0
+        if args.status_json:
+            print(json.dumps(engine.status(), ensure_ascii=False))
+            return 0
+        return gui()
+    except Exception as error:
+        print(f"Hiili: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

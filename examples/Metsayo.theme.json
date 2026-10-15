@@ -1,0 +1,27 @@
+{
+  "format": "chatgpt-ubuntu-theme",
+  "version": 1,
+  "id": "metsayo",
+  "name": "Metsäyö",
+  "description": "Tumma metsä: mustaa, havunvihreää ja pehmeitä vihreitä korostuksia.",
+  "author": "Yhteisön esimerkkiteema",
+  "license": "CC0-1.0",
+  "target": "Ubuntu / GNOME (väripaletti; kohdeversio tarkistetaan erikseen)",
+  "accent": "green",
+  "sample": "#315447",
+  "colors": {
+    "#11151a": "#111914",
+    "#0b0e12": "#0a100c",
+    "#171c22": "#1b261f",
+    "#151a20": "#162119",
+    "#1e252e": "#26352b",
+    "#191f27": "#202e25",
+    "#1c232c": "#2b3b30",
+    "accent_bg": "#3e6b50",
+    "accent_light": "#b4d6bd",
+    "folder_top": "#3c6750",
+    "folder_bottom": "#1e3828",
+    "folder_stroke": "#719e7e",
+    "glyph": "#c4ddca"
+  }
+}

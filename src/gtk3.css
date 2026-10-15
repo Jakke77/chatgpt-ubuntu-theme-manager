@@ -1,0 +1,45 @@
+/* Hiili: original graphite palette over the installed Ubuntu Yaru controls. */
+@define-color theme_bg_color #11151a;
+@define-color theme_fg_color #e3e8ec;
+@define-color theme_base_color #0b0e12;
+@define-color theme_text_color #e3e8ec;
+@define-color theme_selected_bg_color #3d5e67;
+@define-color theme_selected_fg_color #f1f5f5;
+@define-color theme_unfocused_bg_color #11151a;
+@define-color theme_unfocused_fg_color #a0a8b2;
+@define-color theme_unfocused_base_color #0d1014;
+@define-color theme_unfocused_text_color #aeb6c0;
+@define-color borders #303741;
+@define-color unfocused_borders #262c34;
+@define-color insensitive_bg_color #171c22;
+@define-color insensitive_fg_color #727b86;
+@define-color insensitive_base_color #11151a;
+@define-color warning_color #b69b70;
+@define-color error_color #c9818e;
+@define-color success_color #91b09c;
+
+window.background, .background { background-color: #11151a; color: #e3e8ec; }
+headerbar, .titlebar { background-image: none; background-color: #171c22; color: #e3e8ec; border-color: #303741; box-shadow: inset 0 -1px #282f38; }
+headerbar:backdrop, .titlebar:backdrop { background-color: #14181e; color: #949da9; }
+.view, treeview.view, textview text, iconview { background-color: #0b0e12; color: #e3e8ec; }
+.sidebar, .sidebar .view, placessidebar { background-color: #151a20; color: #c2cad3; }
+popover.background, menu, .menu, .context-menu { background-color: #191f26; color: #e3e8ec; border-color: #343c46; }
+button { background-image: none; background-color: #242c35; color: #e3e8ec; border-color: #353e49; text-shadow: none; }
+button:hover { background-image: none; background-color: #303b47; border-color: #505d6a; }
+button:active, button:checked { background-image: none; background-color: #344750; }
+headerbar button, .titlebar button { background-color: transparent; border-color: transparent; }
+headerbar button:hover, .titlebar button:hover { background-color: #2a333d; }
+button.suggested-action, button.suggested-action:hover { background-image: none; background-color: #3d5e67; border-color: #577a82; color: #f1f5f5; }
+button.destructive-action { background-image: none; background-color: #673d4a; color: #f2e4e8; }
+entry, spinbutton:not(.vertical), searchentry { background-image: none; background-color: #0d1218; border-color: #343e49; color: #e3e8ec; }
+entry:focus { border-color: #779fa4; box-shadow: inset 0 0 0 1px #779fa4; }
+row:selected, .view:selected, treeview.view:selected, textview text selection, selection { background-color: #344e58; color: #f1f5f5; }
+switch:checked, scale highlight, progressbar progress { background-image: none; background-color: #547c80; border-color: #547c80; }
+notebook header { background-color: #151a20; border-color: #303741; }
+notebook header tab:checked { background-color: #242b34; box-shadow: inset 0 -2px #7da8a8; }
+tooltip, tooltip.background { background-color: #202832; color: #edf0f4; border-color: #46515e; }
+separator { background-color: #303741; }
+scrollbar slider { background-color: #4c5967; border-color: transparent; }
+scrollbar slider:hover { background-color: #71808e; }
+.dim-label { color: #99a4b1; opacity: 1; }
+

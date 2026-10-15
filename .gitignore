@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+/package/
+/dist/
+/test-artifacts/
+/tools/
+/tests/hiili-*/
+/tests/manager-hooks-*/
+/tests/package-cli-*/
+/tests/source-release-*/
+.pytest_cache/
