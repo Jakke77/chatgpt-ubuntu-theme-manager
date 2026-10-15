@@ -1,3 +1,31 @@
+# ChatGPT Ubuntu Theme Manager 1.2.3 — tavallinen ChatGPT-sivu ja keskustelukieli
+
+- **Tee uusia teemoja ChatGPT:llä** kopioi koko promptin ja avaa tavallisen
+  `https://chatgpt.com/`-sivun ilman kyselyparametreja. Promptin esitäyttö
+  verkko-osoitteesta on poistettu; osoitteessa ei välitetä promptia tai
+  koneen versiotietoja.
+- Käyttäjä odottaa sivun latautumista, liittää tekstin **Ctrl+V**, tarkistaa
+  sen ja lähettää itse. Erillinen kopiointikuvake kopioi edelleen vain tekstin
+  leikepöydälle. **Kopioi tiedot** kopioi pelkän näkyvän raportin.
+- Molemmissa promptitoiminnoissa käytetään samaa tekstiä ja samaa näkyvää
+  raporttia, kun kohde vastaa paikallista konetta. Raportin haku ja toista
+  järjestelmää varten muokattavan kohteen käsittely säilyvät.
+- Prompti pyytää käyttämään käyttäjän tunnettua ChatGPT-oletus- tai
+  keskustelukieltä. Jos kieli ei ole tiedossa, se pyydetään kysymään ensin.
+  Teeman neljä aloituskysymystä ja asennusohjeet pyydetään samalla kielellä.
+  Teknisen mallin suomen kielestä ei pidä päätellä käyttäjän toivetta.
+- Manageri ei lue ChatGPT-tilin kieliasetuksia; käyttöliittymä on edelleen
+  suomenkielinen. Sisältörajaus, teeman käyttöönotto ja palautus, tiedostomuoto,
+  GPL-lisenssi ja ylläpitolinjaus säilyvät ennallaan.
+
+Verkkopalvelun vahvistusvirheen tarkkaa syytä ei ole varmistettu. Muutos ei
+takaa ChatGPT:n toimintaa ilman kirjautumista. Jos verkkosivu näyttää virheen,
+päivitä tai yritä uudelleen ja liitä teksti vasta sivun toimiessa.
+Tarkistusten rajaus kuvataan [julkaisutiedoissa](RELEASE_NOTES.md).
+
+Alla säilyvät aiempien julkaisujen todennetut tarkistukset. Näissä aiemmissa
+versioissa prompti valmisteltiin myös verkko-osoitteen kyselyyn.
+
 # ChatGPT Ubuntu Theme Manager 1.2.2 — koneen versiotiedot
 
 - **Hae koneen tiedot** päivittää teeman kohdejärjestelmän paikallisesta

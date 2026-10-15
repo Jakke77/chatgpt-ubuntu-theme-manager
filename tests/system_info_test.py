@@ -7,7 +7,7 @@ import sys
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import system_info
@@ -126,7 +126,7 @@ class SystemInfoTest(unittest.TestCase):
             self.assertEqual(system_info.system_target(), "Ubuntu 26.10, GNOME 51.0")
         collect.assert_called_once_with()
 
-    def test_full_prompt_and_browser_url_share_the_exact_report(self):
+    def test_full_prompt_keeps_report_but_browser_url_contains_no_prompt_data(self):
         from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url
         report = system_info.validate_system_info({"distribution": "Ubuntu 26.10", "gnome": "51.0",
                                                    "gtk": "4.24.1", "libadwaita": "1.10.0", "session": "Wayland"})
@@ -136,8 +136,34 @@ class SystemInfoTest(unittest.TestCase):
             with self.subTest(kind=kind):
                 prompt = build_prompt(kind, target, report)
                 self.assertIn(text, prompt)
-                self.assertEqual(parse_qs(urlparse(chatgpt_url(kind, target, report)).query)["q"], [prompt])
+                url = chatgpt_url(kind, target, report)
+                self.assertEqual(url, "https://chatgpt.com/")
+                self.assertEqual(urlparse(url).query, "")
+                self.assertEqual(urlparse(url).fragment, "")
                 self.assertIn("älä arvaa puuttuvia versioita", prompt)
+                self.assertNotIn("/home/", prompt)
+
+    def test_clean_browser_url_does_not_include_custom_target_for_any_prompt(self):
+        from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url
+        for kind in PROMPTS:
+            with self.subTest(kind=kind):
+                target = "Ubuntu 24.04 / GNOME 46"
+                self.assertIn(target, build_prompt(kind, target))
+                self.assertEqual(chatgpt_url(kind, target), "https://chatgpt.com/")
+
+    def test_every_prompt_prefers_the_web_chat_default_language(self):
+        from chatgpt_prompts import LANGUAGE_INSTRUCTION, PROMPTS, build_prompt
+        for kind in PROMPTS:
+            with self.subTest(kind=kind):
+                prompt = build_prompt(kind, "Ubuntu 26.10 / GNOME 51")
+                self.assertIn(LANGUAGE_INSTRUCTION, prompt)
+                self.assertNotIn("Keskustele kanssani suomeksi", prompt)
+                self.assertNotIn("suomenkielinen", prompt)
+                # Language comes from the web conversation, not private local
+                # account information appended to this public version report.
+                self.assertNotIn("LANG=", prompt)
+                self.assertNotIn("LC_ALL=", prompt)
+                self.assertNotIn("HOSTNAME=", prompt)
                 self.assertNotIn("/home/", prompt)
 
     def test_prompt_without_report_preserves_a_different_target(self):
@@ -148,12 +174,13 @@ class SystemInfoTest(unittest.TestCase):
         self.assertNotIn("26.10", prompt)
 
     def test_report_cannot_add_private_fields_or_bypass_content_checks(self):
-        from chatgpt_prompts import build_prompt
+        from chatgpt_prompts import build_prompt, chatgpt_url
         from content_policy import ContentPolicyError
-        with self.assertRaises(ValueError):
-            build_prompt(system_details={"hostname": "private-host"})
-        with self.assertRaises(ContentPolicyError):
-            build_prompt(target="Ubuntu 26.10", system_details={"distribution": "Identity theft"})
+        for factory in (build_prompt, chatgpt_url):
+            with self.subTest(factory=factory.__name__), self.assertRaises(ValueError):
+                factory(system_details={"hostname": "private-host"})
+            with self.subTest(factory=factory.__name__), self.assertRaises(ContentPolicyError):
+                factory(target="Ubuntu 26.10", system_details={"distribution": "Identity theft"})
 
 
 if __name__ == "__main__":

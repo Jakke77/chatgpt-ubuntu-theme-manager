@@ -1,6 +1,5 @@
 """Public, editable interview prompts for the manager's data-only theme format."""
 import json
-from urllib.parse import urlencode
 from content_policy import POLICY_PROMPT, validate_content
 from system_info import system_target, format_system_info, validate_system_info
 
@@ -9,6 +8,16 @@ PROMPTS = {
     "variant": ("Hiilin uusi väriversio", "Haluan uuden väri- ja kuvakeversion Hiili-teemasta ChatGPT Ubuntu Theme Manageriin."),
     "ubuntu": ("Oma Ubuntu Dark", "Haluan oman Ubuntu Dark -tulkinnan: Ubuntuun sopiva tumma teema, jossa voidaan käyttää oranssia ja munakoison sävyjä. Kysy kuitenkin ensin oma makuni ja anna minun valita värit."),
 }
+
+LANGUAGE_INSTRUCTION = (
+    "Response language: Use the user's preferred/default language in ChatGPT if that "
+    "preference is available to you. Otherwise use the language already established "
+    "in this conversation. If neither is known, first ask which language the user "
+    "wants, then continue with the theme questions in that language. Do not infer "
+    "Finnish or any other preferred language from this technical template. Translate "
+    "the example questions and all user-facing instructions into the chosen language. "
+    "Do not claim to have read account settings you cannot access."
+)
 
 
 def build_prompt(kind="new", target=None, system_details=None):
@@ -45,7 +54,9 @@ def build_prompt(kind="new", target=None, system_details=None):
         },
     }
     example_json = json.dumps(example, ensure_ascii=False, indent=2)
-    return f"""Toimi Linux-työpöytäteemojen värisuunnittelijana. Keskustele kanssani suomeksi.
+    return f"""Act as a Linux desktop theme color designer.
+
+{LANGUAGE_INSTRUCTION}
 
 Tavoite: {goal}
 Kohdeympäristön lähtötieto: {target}. Voin tehdä paletin myös toiselle Ubuntu-versiolle. Tämä on julkinen versiotieto, ei laitteen tai käyttäjän tunniste.
@@ -53,7 +64,7 @@ Kohdeympäristön lähtötieto: {target}. Voin tehdä paletin myös toiselle Ubu
 
 {POLICY_PROMPT}
 
-ALOITA KYSYMÄLLÄ, älä vielä tee teemaa tai koodia. Esitä ensimmäisessä vastauksessa nämä neljä helppoa kysymystä ja odota vastauksiani:
+ALOITA KYSYMÄLLÄ, älä vielä tee teemaa tai koodia. Kun käyttäjän kieli on selvillä, esitä nämä neljä helppoa kysymystä sille käännettyinä ja odota vastauksiani:
 1. Haluanko lähes mustan vai tummanharmaan pohjan, ja mikä olisi teeman nimi?
 2. Mitä pää- ja korostusvärejä haluan? Anna esimerkkeinä petrooli, luumu, grafiitti, metsänvihreä ja Ubuntu-oranssi. Voin myös pyytää sinua ehdottamaan.
 3. Millaista tunnelmaa haluan: pelkistettyä, pehmeää, teknistä, goottilaista vai jotain muuta? Voin liittää mallikuvan.
@@ -80,13 +91,15 @@ Täydellinen kelvollinen esimerkki; korvaa sen nimi, tunniste ja värit toiveide
 {example_json}
 ```
 
-Tarkista JSON-syntaksi, avaimet, väriarvot ja kontrasti käytettävissä olevilla työkaluilla. Anna lyhyt suomenkielinen ohje: avaa ChatGPT Ubuntu Theme Manager → Tuo teema → valitse toimitettu ZIP/JSON → valitse uusi teema → Ota valittu teema käyttöön. Kuvakkeet saavat paletin värit automaattisesti, ja taustakuvan vaihtamisen voi valita managerissa.
+Tarkista JSON-syntaksi, avaimet, väriarvot ja kontrasti käytettävissä olevilla työkaluilla. Anna käyttäjän valitsemalla kielellä lyhyt ohje: avaa ChatGPT Ubuntu Theme Manager → Tuo teema → valitse toimitettu ZIP/JSON → valitse uusi teema → Ota valittu teema käyttöön. Kuvakkeet saavat paletin värit automaattisesti, ja taustakuvan vaihtamisen voi valita managerissa.
 
 Väripaletti voidaan käyttää eri Ubuntu/GNOME-versioissa, jos manageri ja sen vaatimat GTK-, libadwaita-, Yaru- ja GNOME Shell -osat ovat kyseisessä ympäristössä yhteensopivia. Manageri käyttää koneen omaa Yaru-pohjaa. Pelkkä target-kenttä ei tee managerin asentajasta tai Shell-tyyleistä yhteensopivia vanhemman version kanssa. Älä lupaa testaamatonta toimivuutta; kerro täsmällisesti mitä testasit ja mikä jää kohdekoneella tarkistettavaksi.
 
-Aloita nyt vain neljästä kysymyksestä ja odota vastauksiani."""
+Aloita nyt neljästä kysymyksestä käyttäjän kielellä. Jos kieli ei ole tiedossa, kysy ensin haluamani kieli. Odota vastauksiani."""
 
 
 def chatgpt_url(kind="new", target=None, system_details=None):
-    # Sign-in can discard query text; the GUI also copies the public prompt.
-    return "https://chatgpt.com/?" + urlencode({"q": build_prompt(kind, target, system_details)})
+    # Validate the copied prompt's input, but send no prompt or system report in
+    # the URL. The user pastes plain text only after the browser page is ready.
+    build_prompt(kind, target, system_details)
+    return "https://chatgpt.com/"

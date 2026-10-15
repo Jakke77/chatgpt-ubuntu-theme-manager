@@ -8,10 +8,10 @@ import sys
 import traceback
 import zipfile
 from types import SimpleNamespace
-from urllib.parse import urlparse, parse_qs
 import gi
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gio, GLib, Gdk
+gi.require_version("Adw", "1")
+from gi.repository import Gtk, Gio, GLib, Gdk, Adw
 
 BASE = Path(__file__).resolve().parents[1]
 APP_LIB = Path(os.environ.get("THEME_MANAGER_TEST_LIB", BASE / "src"))
@@ -128,10 +128,9 @@ def step():
         elif stage == 21:
             application.chatgpt_button.emit("clicked")
             assert len(captured) == 1
-            url = urlparse(captured[0])
-            assert url.scheme == "https" and url.netloc == "chatgpt.com"
+            assert captured[0] == "https://chatgpt.com/", "Browser must open a clean page without prompt data"
             expected = build_prompt("variant", application.prompt_target.get_text(), application.system_details)
-            assert parse_qs(url.query)["q"] == [expected]
+            assert "Ctrl+V" in application.info.get_text()
             assert format_system_info(application.system_details) in expected
             def check_prompt_clipboard(clipboard, result):
                 global stage
@@ -149,8 +148,44 @@ def step():
             application.chatgpt_button.emit("clicked")
             assert len(captured) == 2
             expected = build_prompt("variant", "Ubuntu 24.04 / GNOME 46")
-            assert parse_qs(urlparse(captured[-1]).query)["q"] == [expected]
+            assert captured[-1] == "https://chatgpt.com/"
             assert "Koneelta haetut teeman yhteensopivuustiedot" not in expected
+            def check_custom_prompt_clipboard(clipboard, result):
+                global stage
+                try:
+                    assert clipboard.read_text_finish(result) == expected
+                    stage = 26
+                except Exception:
+                    report(traceback.format_exc())
+            Gdk.Display.get_default().get_clipboard().read_text_async(None, check_custom_prompt_clipboard)
+            stage = 27
+        elif stage == 26:
+            # A failed external launch must preserve the copied prompt and give
+            # a manual route; neither a real browser nor a conversation is used.
+            original_launch = Gio.AppInfo.launch_default_for_uri
+            original_present = Adw.AlertDialog.present
+            failures = []
+            Gio.AppInfo.launch_default_for_uri = lambda uri, context: False
+            Adw.AlertDialog.present = lambda dialog, window: failures.append((dialog.get_heading(), dialog.get_body()))
+            try:
+                application.chatgpt_button.emit("clicked")
+            finally:
+                Gio.AppInfo.launch_default_for_uri = original_launch
+                Adw.AlertDialog.present = original_present
+            assert len(captured) == 2, "Failed browser launch unexpectedly used the normal handler"
+            assert len(failures) == 1 and failures[0][0] == "Selainta ei voitu avata"
+            assert "leikepöydällä" in failures[0][1] and "chatgpt.com" in failures[0][1]
+            expected = build_prompt("variant", "Ubuntu 24.04 / GNOME 46")
+            def check_failed_launch_clipboard(clipboard, result):
+                global stage
+                try:
+                    assert clipboard.read_text_finish(result) == expected
+                    stage = 28
+                except Exception:
+                    report(traceback.format_exc())
+            Gdk.Display.get_default().get_clipboard().read_text_async(None, check_failed_launch_clipboard)
+            stage = 29
+        elif stage == 28:
             application.detect_button.emit("clicked")
             stage = 25
         elif stage == 25 and application.detect_button.get_sensitive():

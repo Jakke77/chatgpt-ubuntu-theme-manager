@@ -10,7 +10,7 @@ sudo apt install python3 dpkg libgtk-3-bin desktop-file-utils
 python3 build.py
 ```
 
-The result is `dist/chatgpt-ubuntu-theme-manager_1.2.2_all.deb`.
+The result is `dist/chatgpt-ubuntu-theme-manager_1.2.3_all.deb`.
 Generated data in `package/` is ignored by Git. Building does not apply a
 theme or modify the active desktop.
 
@@ -50,14 +50,24 @@ python3 tests/render_ui.py --smoke
 
 This runs the built package's program files with private XDG directories, a
 private D-Bus session and a virtual X server. Theme import, palette selection,
-apply/restore and clipboard/URL matching are exercised. The 1.2.2 workflow
-also checks system-information refresh, report display and copying, inclusion
-of the same displayed report in both prompt actions, and exclusion when the
-target is edited for another system. The system file picker
+apply/restore and clipboard/browser-entry handling are exercised. The 1.2.3
+workflow checks that the browser action opens exactly `https://chatgpt.com/`
+without query parameters, while both prompt actions copy the same full text.
+It also checks system-information refresh, report display and copying,
+inclusion of the same displayed report in both prompt actions, and exclusion
+when the target is edited for another system. The system file picker
 and external browser launch are stubbed; the test never sends a ChatGPT message.
 Screenshots are saved under ignored `test-artifacts/`, or a directory set by
 `SCREENSHOT_OUTPUT_DIR`. Existing theme files and settings on the real desktop
 are not used by these tests.
+
+Prompt checks should verify the language instructions as text: use a known
+user default or conversation language, ask first if it is unknown, and do not
+infer Finnish from the technical template. The app cannot read ChatGPT account
+language settings. A passing local test does not establish the web service's
+response language, logged-out availability, verification state or successful
+message delivery. The user's screenshots showed a verification error followed
+by visible text after a refresh; the exact web-service cause is not established.
 
 The native style checks are tied to the verified GNOME 51 environment. A
 passing test on a different distribution is not promised. Sandboxed D-Bus

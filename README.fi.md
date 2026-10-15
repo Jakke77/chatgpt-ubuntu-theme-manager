@@ -1,4 +1,4 @@
-# ChatGPT Ubuntu Theme Manager 1.2.2
+# ChatGPT Ubuntu Theme Manager 1.2.3
 
 > Projekti jaetaan sellaisenaan. Käyttö on omalla vastuulla. Jatkuvaa ylläpitoa,
 > tukea tai tulevaa yhteensopivuutta ei luvata. Katso [ylläpitolinjaus](SUPPORT.md).
@@ -9,16 +9,18 @@ samaan teemavalikoimaan. Oma teema ei tee sovellusvalikkoon uutta kuvaketta.
 
 Ohjelma on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 
-Versio 1.2.2 lisää **Hae koneen tiedot** -painikkeen ja kopioitavan
-versiotietoraportin teeman kohdejärjestelmän alle. Samat tiedot liitetään
-paikallista konetta varten tehtävään ChatGPT-promptiin. Version 1.2.1
-yleiskäyttöön sopiva sisältörajaus ja metatietojen paikallinen tarkistus
+Versio 1.2.3 avaa ChatGPT-painikkeesta tavallisen verkkosivun ja kopioi
+valmiin promptin leikepöydälle. Liitä teksti itse **Ctrl+V**, kun sivu on
+latautunut. Prompti pyytää käyttämään käyttäjän ChatGPT-oletus- tai
+keskustelukieltä ja kysymään kielen ensin, jos se ei ole tiedossa.
+
+Versiotietoraportti, sisältörajaus ja metatietojen paikallinen tarkistus
 säilyvät mukana. Katso [sisältölinjaus ja sen rajat](CONTENT_POLICY.md).
 
 ## Asennus ja päivitys klikkaamalla
 
 1. Sulje aiemmin avoinna oleva Hiili- tai Theme Manager -ikkuna.
-2. Avaa `chatgpt-ubuntu-theme-manager_1.2.2_all.deb` kaksoisnapsauttamalla sitä.
+2. Avaa `chatgpt-ubuntu-theme-manager_1.2.3_all.deb` kaksoisnapsauttamalla sitä.
 3. Valitse paketin asennusohjelmassa **Asenna** tai **Päivitä** ja anna pyydetty salasana.
 4. Avaa sovellusvalikosta **ChatGPT Ubuntu Theme Manager**.
 
@@ -94,11 +96,13 @@ neutraalia metatietoa. [Tarkemmat rajat ja esimerkit](CONTENT_POLICY.md).
 3. Tarkista **Teeman kohdejärjestelmä**. Voit kirjoittaa myös toisen kohteen,
    esimerkiksi `Ubuntu 26.04 / GNOME`. Tällöin paikallisen koneen raportti
    jätetään pois promptista, jotta eri ympäristöjen tiedot eivät sekoitu.
-4. Paina **Tee uusia teemoja ChatGPT:llä**. ChatGPT avautuu oletusselaimessa
-   ja koko prompti kopioidaan leikepöydälle. Paikallista kohdetta käytettäessä
-   mukana on sama raportti, joka näkyy ikkunassa. Jos teksti puuttuu
-   kirjoituskentästä tai kirjautuminen kadottaa sen, liitä **Ctrl+V** ja lähetä itse.
-5. Vastaa ChatGPT:n neljään aloituskysymykseen. Prompti pyytää lopuksi
+4. Paina **Tee uusia teemoja ChatGPT:llä**. Koko prompti kopioidaan
+   leikepöydälle ja oletusselain avaa tavallisen `https://chatgpt.com/`-sivun
+   ilman esitäytettyä tekstiä. Paikallista kohdetta käytettäessä kopiossa on
+   sama raportti, joka näkyy ikkunassa. Odota sivun latautumista, liitä teksti
+   kirjoituskenttään **Ctrl+V**, tarkista se ja lähetä itse.
+5. Jos ChatGPT ei tiedä haluamaasi kieltä, vastaa ensin kielikysymykseen.
+   Vastaa sitten teeman neljään aloituskysymykseen. Prompti pyytää lopuksi
    manageriin tuotavan `.ctm-theme.zip`- tai `.json`-tiedoston.
 6. Tallenna valmis tiedosto ja tuo se managerin **Tuo teema…** -painikkeella.
 
@@ -106,6 +110,18 @@ Promptin kopiointipainikkeella saat saman koko tekstin avaamatta selainta.
 **Kopioi tiedot** kopioi vain näkyvän järjestelmätietoraportin.
 Jos verkkokeskustelu ei pysty tekemään ladattavaa tiedostoa, se voi antaa
 koko JSONin, jonka tallennat tekstieditorilla `.json`-tiedostoksi.
+
+Jos sivulla näkyy vahvistusvirhe tai kirjoituskenttä ei toimi, päivitä sivu
+(**F5**) tai valitse sivun **Yritä uudelleen**. Liitä prompti uudelleen, kun
+sivu toimii. Manageri ei korjaa verkkopalvelun virhetilaa; kirjautumisesta
+ja käytettävissä olevista toiminnoista päättää ChatGPT-palvelu.
+
+Managerin käyttöliittymä pysyy suomenkielisenä. Aloitusprompti pyytää
+ChatGPT:tä käyttämään käyttäjän tunnettua oletus- tai keskustelukieltä sekä
+kääntämään myös teeman aloituskysymykset ja asennusohjeet sille. Jos kieli
+ei ole tiedossa, prompti pyytää kysymään sen ensin. Manageri ei pääse
+lukemaan ChatGPT-tilin kieliasetuksia. Teknisen promptimallin suomen kieli
+ei ole ohje päätellä käyttäjän toivomaa kieltä.
 
 Aloitusprompti pyytää yleiskäyttöön sopivaa sisältöä saman rajauksen mukaan.
 Manageri ei hallitse erillistä verkkokeskustelua, siellä muokattua promptia
@@ -127,6 +143,7 @@ ennen kuin kenttä vastaa jälleen haettua paikallista kohdetta.
 
 **Codexia tai OpenAI API -avainta ei tarvita.** Manageri ei lähetä viestiä
 ChatGPT-keskusteluun automaattisesti. Tarkista valmis teksti ennen lähettämistä.
+Avattava verkko-osoite ei sisällä promptia, raporttia tai kyselyparametreja.
 Paikallisia tiedostoja tai palautuskopioita ei liitetä keskusteluun.
 
 Aiemmalla promptilla tehtyä erillistä `.deb`-teemasovellusta ei voi tuoda
@@ -189,8 +206,8 @@ chatgpt-ubuntu-theme-manager --print-prompt new --prompt-target 'Ubuntu 26.04 / 
 
 ## Lähdekoodi ja jakaminen
 
-Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.2-source.tar.gz`.
-Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.2-jakopaketti.zip`.
+Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.3-source.tar.gz`.
+Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.3-jakopaketti.zip`.
 Ohjelma ja sen omat pohjat ovat GPL 3 tai uudempi -lisenssillä.
 Metsäyö-esimerkkipaletti on CC0-1.0-lisenssillä. Omassa paletissa lisenssi
 ja tekijä ilmoitetaan sen JSON-tiedoissa.
@@ -202,6 +219,21 @@ projektin `dist/`-kansioon. Rakennus tarvitsee Pythonin lisäksi
 `dpkg-deb`-, `gtk-update-icon-cache`- ja `desktop-file-validate`-työkalut.
 
 ## Julkaisun tarkistukset
+
+Version 1.2.3 tarkistuksissa läpäisivät 53 yksikkötestiä sekä GTK 3-, GTK 4-,
+GNOME Shell -tyyli- ja asennuskoukkutarkistukset. Rakennetun paketin yksityinen
+graafinen koe varmisti puhtaan ChatGPT-osoitteen ja kokonaisen leikepöytäpromptin
+konetietoineen, toisen kohteen käsittelyn sekä kopion säilymisen selaimen
+avausvirheessä. Myös teeman tuonti, käyttöönotto ja palautus toimivat.
+Kieliohje tarkistettiin kaikista kolmesta promptista. Ulkoinen selain ja
+tiedostovalitsin korvattiin hallituilla vastauksilla; ChatGPT:hen ei lähetetty
+viestiä eikä mallin kielivalintaa testattu.
+
+Version 1.2.3 muutokset ja tarkistusten rajaus ovat tiedostossa
+[RELEASE_NOTES.md](RELEASE_NOTES.md). Alla säilytetään aiempien julkaisujen
+todennetut tarkistukset. Aiemmissa versioissa prompti valmisteltiin myös
+verkko-osoitteen kyselyyn; versiosta 1.2.3 alkaen se välitetään vain
+leikepöydän kautta käyttäjän itse liitettäväksi.
 
 Version 1.2.2 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
 
@@ -220,10 +252,6 @@ Version 1.2.2 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
 - Integraatio-, GTK 3/GTK 4/GNOME Shell -tyyli- ja asennuskoukkutarkistukset
   läpäisivät. Järjestelmänvalvojan oikeuksilla tehtävää asennusta ja muita
   Ubuntu-versioita ei ajettu. Todellisen koneen versiot luettiin paikallisesti.
-
-Version 1.2.2 muutokset ja tämän päivityksen tarkistusten rajaus ovat
-tiedostossa [RELEASE_NOTES.md](RELEASE_NOTES.md). Alla säilytetään aiempien
-julkaisujen todennetut tarkistukset.
 
 Version 1.2.1 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
 

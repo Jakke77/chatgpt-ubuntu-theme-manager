@@ -154,6 +154,7 @@ def gui():
             self.prompt_target.connect("changed", lambda *_: self.update_system_hint())
             launch_row = Gtk.Box(spacing=10)
             self.chatgpt_button = Gtk.Button(label="Tee uusia teemoja ChatGPT:llä", hexpand=True)
+            self.chatgpt_button.set_tooltip_text("Kopioi valmis prompti ja avaa chatgpt.com. Liitä teksti Ctrl+V:llä sivun latauduttua.")
             self.chatgpt_button.connect("clicked", lambda *_: self.launch_chatgpt())
             launch_row.append(self.chatgpt_button)
             copy = Gtk.Button.new_from_icon_name("edit-copy-symbolic")
@@ -161,7 +162,7 @@ def gui():
             copy.connect("clicked", lambda *_: self.copy_prompt())
             launch_row.append(copy)
             create.append(launch_row)
-            hint = Gtk.Label(label="ChatGPT kysyy toiveesi. Lataa valmis teematiedosto ja lisää se Tuo teema -painikkeella.", wrap=True)
+            hint = Gtk.Label(label="Odota ChatGPT-sivun latautumista, liitä prompti Ctrl+V:llä ja lähetä itse. Vahvistusvirheen jälkeen päivitä sivu ja liitä uudelleen.", wrap=True)
             hint.add_css_class("hiili-footer")
             create.append(hint)
             body.append(create)
@@ -290,7 +291,7 @@ def gui():
                 return
             attached = self.system_details_for_prompt() is not None
             self.system_report_hint.set_label(
-                "Nämä tiedot liitetään kopioituun promptiin ja ChatGPT-linkkiin. Ei käyttäjä- tai konetunnisteita."
+                "Nämä tiedot liitetään leikepöydän promptiin myös ChatGPT-painikkeesta. Verkko-osoitteeseen ei liitetä tietoja."
                 if attached else
                 "Kohdetta on muokattu: tämän koneen tietoja ei liitetä eri kohteen promptiin. Hae uudelleen palataksesi tähän koneeseen.")
 
@@ -349,7 +350,7 @@ def gui():
             try:
                 if not Gio.AppInfo.launch_default_for_uri(chatgpt_url(kind, self.prompt_target.get_text(), self.system_details_for_prompt()), None):
                     raise RuntimeError("Oletusselain ei avautunut.")
-                self.info.set_label("ChatGPT avataan selaimeen. Lähetä aloitusprompti; tarvittaessa liitä se ensin Ctrl+V.")
+                self.info.set_label("Prompti on leikepöydällä. Odota ChatGPT-sivun latautumista, liitä Ctrl+V:llä ja lähetä itse.")
             except Exception as error:
                 dialog = Adw.AlertDialog(heading="Selainta ei voitu avata", body=f"Prompti on leikepöydällä. Avaa chatgpt.com ja liitä se keskusteluun.\n\n{error}")
                 dialog.add_response("close", "Sulje")

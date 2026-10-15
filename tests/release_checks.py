@@ -7,13 +7,13 @@ import re
 import subprocess
 import sys
 import tempfile
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 from xml.etree import ElementTree
 
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE / "src"))
 from palettes import PALETTES
-from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url
+from chatgpt_prompts import LANGUAGE_INSTRUCTION, PROMPTS, build_prompt, chatgpt_url
 from theme_packs import validate_manifest
 from content_policy import ContentPolicyError, POLICY_PROMPT
 
@@ -24,12 +24,17 @@ def prompt_example(prompt):
     return validate_manifest(json.loads(blocks[0]))
 
 for kind in PROMPTS:
-    url = urlparse(chatgpt_url(kind))
+    uri = chatgpt_url(kind)
+    url = urlparse(uri)
     prompt = build_prompt(kind)
     assert POLICY_PROMPT in prompt
+    assert LANGUAGE_INSTRUCTION in prompt
+    assert "Keskustele kanssani suomeksi" not in prompt
+    assert "suomenkielinen" not in prompt
+    assert uri == "https://chatgpt.com/"
     assert url.scheme == "https" and url.netloc == "chatgpt.com"
-    assert parse_qs(url.query)["q"] == [prompt]
-    assert "Aloita nyt vain neljästä kysymyksestä ja odota vastauksiani." in prompt
+    assert not url.query and not url.fragment, "Browser launch must not prefill or transmit prompt data"
+    assert "ALOITA KYSYMÄLLÄ" in prompt and "neljä" in prompt
     assert "/home/" not in prompt and "API_KEY" not in prompt
     manifest = prompt_example(prompt)
     assert manifest["format"] == "chatgpt-ubuntu-theme" and manifest["version"] == 1
@@ -46,14 +51,13 @@ for kind in PROMPTS:
     assert exported.read_text().rstrip() == prompt
     custom_target = "Ubuntu 24.04, GNOME 46"
     custom_prompt = build_prompt(kind, target=custom_target)
-    custom_url = urlparse(chatgpt_url(kind, target=custom_target))
-    assert parse_qs(custom_url.query)["q"] == [custom_prompt]
+    assert chatgpt_url(kind, target=custom_target) == "https://chatgpt.com/"
     assert prompt_example(custom_prompt)["target"] == custom_target
     assert f"Kohdeympäristön lähtötieto: {custom_target}." in custom_prompt
     assert "26.10" not in custom_prompt, "A chosen target must replace the local Ubuntu version"
     assert "Se on ohjetieto, ei väite testatusta yhteensopivuudesta" in custom_prompt
     assert "Älä lupaa testaamatonta toimivuutta" in custom_prompt
-print("PASS: all three interview prompts export valid importable manifests, configurable targets, and matching browser URLs")
+print("PASS: all three interview prompts export valid importable manifests and configurable targets; browser URLs contain no prompt data")
 
 for factory in (build_prompt, chatgpt_url):
     try:
