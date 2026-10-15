@@ -16,6 +16,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import theme_packs
+from content_policy import ContentPolicyError
 
 
 class ThemePacksTest(unittest.TestCase):
@@ -76,6 +77,21 @@ class ThemePacksTest(unittest.TestCase):
         key, metadata = theme_packs.import_theme(self.write_zip())
         self.assertEqual(metadata["name"], "Metsäyö")
         self.assertIn(key, theme_packs.catalog())
+
+    def test_content_policy_blocks_both_json_and_zip_before_writing(self):
+        self.manifest["description"] = "Identity theft and steal passwords"
+        for path in (self.write_json(), self.write_zip()):
+            with self.subTest(path=path), self.assertRaises(ContentPolicyError):
+                theme_packs.import_theme(path)
+            self.assertFalse(self.root.exists(), "Rejected content created an imported theme")
+
+    def test_catalog_rechecks_changed_metadata_without_deleting_files(self):
+        theme_packs.import_theme(self.write_json())
+        installed = self.root / "metsayo/theme.json"
+        self.manifest["name"] = "Explicit pornography"
+        installed.write_text(json.dumps(self.manifest))
+        self.assertEqual(theme_packs.catalog(), {})
+        self.assertTrue(installed.is_file())
 
     def test_color_case_normalized_without_mutating_input(self):
         self.manifest["sample"] = "#ABCDEF"

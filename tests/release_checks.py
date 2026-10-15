@@ -15,6 +15,7 @@ sys.path.insert(0, str(BASE / "src"))
 from palettes import PALETTES
 from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url
 from theme_packs import validate_manifest
+from content_policy import ContentPolicyError, POLICY_PROMPT
 
 
 def prompt_example(prompt):
@@ -25,6 +26,7 @@ def prompt_example(prompt):
 for kind in PROMPTS:
     url = urlparse(chatgpt_url(kind))
     prompt = build_prompt(kind)
+    assert POLICY_PROMPT in prompt
     assert url.scheme == "https" and url.netloc == "chatgpt.com"
     assert parse_qs(url.query)["q"] == [prompt]
     assert "Aloita nyt vain neljästä kysymyksestä ja odota vastauksiani." in prompt
@@ -52,6 +54,15 @@ for kind in PROMPTS:
     assert "Se on ohjetieto, ei väite testatusta yhteensopivuudesta" in custom_prompt
     assert "Älä lupaa testaamatonta toimivuutta" in custom_prompt
 print("PASS: all three interview prompts export valid importable manifests, configurable targets, and matching browser URLs")
+
+for factory in (build_prompt, chatgpt_url):
+    try:
+        factory(target="Identity theft and steal passwords")
+    except ContentPolicyError:
+        pass
+    else:
+        raise AssertionError("Unsafe target metadata reached the prompt")
+print("PASS: unsafe target text is rejected before clipboard or browser preparation")
 
 for selected in PALETTES.values():
     root = BASE / "package/usr/share/icons" / selected["theme"]

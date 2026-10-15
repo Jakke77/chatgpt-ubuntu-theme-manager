@@ -19,6 +19,7 @@ sys.path.insert(0, str(APP_LIB))
 import engine
 from chatgpt_prompts import build_prompt
 from theme_packs import example_manifest
+from content_policy import ContentPolicyError
 
 result_file = Path(sys.argv[1])
 original_theme = engine.settings("org.gnome.desktop.interface").get_string("gtk-theme")
@@ -45,6 +46,28 @@ def step():
             about = application.show_about()
             assert about.get_application_name() == "ChatGPT Ubuntu Theme Manager"
             about.close()
+            policy = application.show_policy()
+            assert policy.get_heading() == "Yleiskäyttöön sopivat teemat"
+            policy.close()
+            invalid = result_file.parent / "invalid-theme.json"
+            metadata = example_manifest()
+            metadata["name"] = "Explicit pornography"
+            invalid.write_text(json.dumps(metadata))
+            try:
+                application.import_from_path(invalid)
+            except ContentPolicyError:
+                pass
+            else:
+                raise AssertionError("GUI import accepted rejected metadata")
+            assert len(application.theme_buttons) == 5
+            errors = []
+            original_policy_error = application.policy_error
+            application.policy_error = lambda error: errors.append(error)
+            application.prompt_target.set_text("Identity theft and steal passwords")
+            application.chatgpt_button.emit("clicked")
+            assert len(errors) == 1 and not captured, "Unsafe target opened the browser"
+            application.policy_error = original_policy_error
+            application.prompt_target.set_text("Ubuntu 26.10 / GNOME 51")
             download = result_file.parent / "metsayo.ctm-theme.zip"
             with zipfile.ZipFile(download, "w", zipfile.ZIP_DEFLATED) as archive:
                 archive.writestr("theme.json", json.dumps(example_manifest(), ensure_ascii=False))

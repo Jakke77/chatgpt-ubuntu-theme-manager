@@ -25,6 +25,21 @@ pysyvät esimerkin mukaisina. Jokainen väri on `#rrggbb`.
   `accent_bg` ja `accent_light` värittävät korostukset. `folder_top`,
   `folder_bottom` ja `folder_stroke` värittävät kansiot; `glyph` kuvakkeiden viivat.
 
+Versiosta 1.2.1 alkaen kaikki kuusi tekstikenttää (`id`, `name`,
+`description`, `author`, `license`, `target`) ovat tavallista tekstiä ilman
+URL-osoitteita tai merkkauskieltä, kuten HTML:ää. Paikalliset sisältösäännöt
+tarkistavat nämä kentät ja hylkäävät tunnistamansa huijaus-, identiteettivarkaus-,
+harhaanjohtavaan toisena esiintymiseen, hyväksikäyttöön, pornografiaan,
+vihasisältöön tai raakaan väkivaltaan liittyvät ilmaukset. Tarkistus ei ole
+yleinen luokittelija: kieli, asiayhteys ja kirjoitusasun muunnelmat voivat
+aiheuttaa sekä vääriä hylkäyksiä että tunnistamatta jäävää sisältöä.
+Tavalliset goottilaiset tyylit, Pride ja muu identiteetin ilmaisu ovat
+sallittuja. Katso [sisältörajaus ja esimerkit](CONTENT_POLICY.md).
+
+Sama validointi koskee tuontia, tallennettujen palettien lukua ja
+käyttöönottoa. Aiemmin tuodun paletin hylkäys poistaa sen vain valikoimasta,
+ei levyltä; aiemman ulkoasun palautus säilyy käytettävissä.
+
 Manageri tarkistaa, että kiinteän leipätekstin `#e3e8ec` kontrasti on vähintään
 4,5:1 jokaisella seitsemällä pintavärillä ja että korostuksen tekstin `#f3f6f6`
 kontrasti `accent_bg`-värillä on vähintään 4,5:1. Koko teeman jokaisen elementin

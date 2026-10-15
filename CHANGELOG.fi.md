@@ -1,3 +1,28 @@
+# ChatGPT Ubuntu Theme Manager 1.2.1 — sisällön rajaus
+
+- Yleiskäyttöön sopivan sisällön ohje lisättiin kaikkiin kolmeen ChatGPT-promptiin.
+- Paikallinen, rajallisiin ilmauksiin perustuva tarkistus käsittelee teeman
+  tunnisteen, nimen, kuvauksen, tekijän, lisenssin ja kohdejärjestelmän tiedot.
+  Se hylkää tunnistamansa huijaus-, hyväksikäyttö-, porno-, viha- ja raakaa
+  väkivaltaa kuvaavat ilmaukset sekä linkit ja merkkauskielen tekstitiedoissa.
+- Tarkistus koskee tuontia ja jo tuotujen teemojen luettelointia. Käsin muutettu
+  hylättävä metadata estää teeman valinnan ja käyttöönoton; alkuperäisen
+  ulkoasun palautus ja käyttäjän omat tiedostot säilyvät.
+- Yläpalkin kilpipainike kertoo sisältörajauksesta ja sen rajoista.
+- Väripaletin tiedostomuoto pysyy versiossa 1. Vanhojen tavallisten palettien
+  tiedostot toimivat edelleen. URL- tai merkkauskieltä sisältävät aiemmat
+  tekstitiedot vaativat muuttamisen tavalliseksi tekstiksi.
+- Tarkistus toimii ilman verkkoa, käyttäjätietojen lähettämistä tai API-avainta.
+  Se ei ole kattava sisällönluokittelija, lainmukaisuuden tae tai erillisen
+  ChatGPT-keskustelun valvoja. Katso [CONTENT_POLICY.md](CONTENT_POLICY.md).
+- Selaimen avaus, leikepöytä ja teeman käyttöönotto säilyvät ennallaan.
+
+### Tarkistukset
+
+38 sisältö- ja tiedostotestiä sekä integraatio-, käyttöliittymä-, tyyli- ja
+asennuskoukkukokeet läpäisivät Ubuntu 26.10 / GNOME 51 -ympäristössä.
+Tarkempi rajaus on [julkaisutiedoissa](RELEASE_NOTES.md).
+
 # ChatGPT Ubuntu Theme Manager 1.2.0 — muutokset
 
 Omat ChatGPT:llä suunnitellut tummat väripaletit voidaan nyt tuoda samaan

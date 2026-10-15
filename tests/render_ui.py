@@ -12,6 +12,8 @@ import shutil
 from PIL import ImageGrab
 
 BASE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE / "src"))
+from palettes import VERSION
 parser = argparse.ArgumentParser()
 parser.add_argument("--showcase", action="store_true")
 parser.add_argument("--smoke", action="store_true")
@@ -70,7 +72,7 @@ try:
             time.sleep(.1)
         report = json.loads((fixture / "smoke.json").read_text())
         assert report["ok"], report
-        print("PASS: real GUI imports a downloaded ZIP, applies and restores palettes; custom-target URL and clipboard match")
+        print("PASS: real GUI rejects unsafe metadata, imports a valid ZIP, applies and restores palettes; URL and clipboard match")
     else:
         time.sleep(2)
     if app.poll() is not None:
@@ -86,7 +88,7 @@ try:
     suffix = "smoke" if args.smoke else ("esikatselu-" + args.variant if args.showcase else "hallinta")
     screenshot_dir = Path(os.environ.get("SCREENSHOT_OUTPUT_DIR", str(BASE / "test-artifacts")))
     screenshot_dir.mkdir(parents=True, exist_ok=True)
-    destination = screenshot_dir / ("chatgpt-ubuntu-theme-manager-1.2-" + suffix + ".png")
+    destination = screenshot_dir / ("chatgpt-ubuntu-theme-manager-" + VERSION + "-" + suffix + ".png")
     ImageGrab.grab(xdisplay=display).save(destination)
     print("Screenshot:", destination)
     messages = [line for line in (fixture / "render.log").read_text().splitlines() if "Traceback" in line or "ERROR" in line or "CRITICAL" in line or "WARNING" in line]

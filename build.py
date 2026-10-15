@@ -219,7 +219,7 @@ def build():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     lib = ROOT / "usr/lib/hiili-theme"
     lib.mkdir(parents=True, exist_ok=True)
-    for name in ("engine.py", "session_apply.py", "hiili-theme", "palettes.py", "chatgpt_prompts.py", "theme_packs.py"):
+    for name in ("engine.py", "session_apply.py", "hiili-theme", "palettes.py", "chatgpt_prompts.py", "theme_packs.py", "content_policy.py"):
         shutil.copy2(BASE / "src" / name, lib / name)
         (lib / name).chmod(0o755 if name in ("hiili-theme", "session_apply.py") else 0o644)
     for name in ("gtk3.css", "gtk4.css", "shell.css"):
@@ -298,6 +298,8 @@ def build():
     """, executable=True)
     docs = ROOT / "usr/share/doc/hiili-theme"
     docs.mkdir(parents=True, exist_ok=True)
+    for name in ("CONTENT_POLICY.md", "SUPPORT.md"):
+        shutil.copy2(BASE / name, docs / name)
     write(docs / "copyright", """
         Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
         Upstream-Name: Hiili

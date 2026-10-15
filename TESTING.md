@@ -10,7 +10,7 @@ sudo apt install python3 dpkg libgtk-3-bin desktop-file-utils
 python3 build.py
 ```
 
-The result is `dist/chatgpt-ubuntu-theme-manager_1.2.0_all.deb`.
+The result is `dist/chatgpt-ubuntu-theme-manager_1.2.1_all.deb`.
 Generated data in `package/` is ignored by Git. Building does not apply a
 theme or modify the active desktop.
 
@@ -23,6 +23,7 @@ used by the native style parser checks. Run the checks in this order:
 ```bash
 python3 build.py
 python3 tests/theme_packs_test.py
+python3 tests/content_policy_test.py
 python3 tests/integration.py
 python3 tests/release_checks.py
 ```

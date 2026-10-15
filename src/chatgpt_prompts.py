@@ -5,6 +5,7 @@ import re
 import shlex
 import subprocess
 from urllib.parse import urlencode
+from content_policy import POLICY_PROMPT, validate_content
 
 PROMPTS = {
     "new": ("Uusi oma teema", "Haluan suunnitella uuden oman tumman Ubuntu-väriteeman."),
@@ -41,6 +42,7 @@ def system_target():
 def build_prompt(kind="new", target=None):
     _title, goal = PROMPTS[kind]
     target = " ".join(str(target or system_target()).split())[:160]
+    validate_content({"target": target})
     example = {
         "format": "chatgpt-ubuntu-theme",
         "version": 1,
@@ -67,6 +69,8 @@ def build_prompt(kind="new", target=None):
 
 Tavoite: {goal}
 Kohdeympäristön lähtötieto: {target}. Voin tehdä paletin myös toiselle Ubuntu-versiolle. Tämä on julkinen versiotieto, ei laitteen tai käyttäjän tunniste.
+
+{POLICY_PROMPT}
 
 ALOITA KYSYMÄLLÄ, älä vielä tee teemaa tai koodia. Esitä ensimmäisessä vastauksessa nämä neljä helppoa kysymystä ja odota vastauksiani:
 1. Haluanko lähes mustan vai tummanharmaan pohjan, ja mikä olisi teeman nimi?

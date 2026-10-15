@@ -1,4 +1,4 @@
-# ChatGPT Ubuntu Theme Manager 1.2.0
+# ChatGPT Ubuntu Theme Manager 1.2.1
 
 > Projekti jaetaan sellaisenaan. Käyttö on omalla vastuulla. Jatkuvaa ylläpitoa,
 > tukea tai tulevaa yhteensopivuutta ei luvata. Katso [ylläpitolinjaus](SUPPORT.md).
@@ -9,14 +9,19 @@ samaan teemavalikoimaan. Oma teema ei tee sovellusvalikkoon uutta kuvaketta.
 
 Ohjelma on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 
+Versio 1.2.1 lisää yleiskäyttöön sopivan sisältörajauksen aloituspromptteihin
+ja teemapakettien metatietojen paikallisen tarkistuksen. Se ei ole kattava
+sisällöntunnistin tai lainmukaisuuden tae. Katso [sisältölinjaus ja sen
+rajat](CONTENT_POLICY.md).
+
 ## Asennus ja päivitys klikkaamalla
 
 1. Sulje aiemmin avoinna oleva Hiili- tai Theme Manager -ikkuna.
-2. Avaa `chatgpt-ubuntu-theme-manager_1.2.0_all.deb` kaksoisnapsauttamalla sitä.
+2. Avaa `chatgpt-ubuntu-theme-manager_1.2.1_all.deb` kaksoisnapsauttamalla sitä.
 3. Valitse paketin asennusohjelmassa **Asenna** tai **Päivitä** ja anna pyydetty salasana.
 4. Avaa sovellusvalikosta **ChatGPT Ubuntu Theme Manager**.
 
-Paketti päivittää aiemman Hiili 1.0:n tai managerin 1.1:n. Päivitys säilyttää
+Paketti päivittää aiemman Hiili 1.0:n tai managerin 1.1:n/1.2:n. Päivitys säilyttää
 nykyisen ulkoasun ja alkuperäisen palautuspisteen. Tekninen Debian-paketin
 nimi on edelleen `hiili-theme`, jotta vanha asennus päivittyy samana pakettina.
 
@@ -62,6 +67,22 @@ Hyväksytty ZIP sisältää juuressaan täsmälleen yhden tiedoston nimeltä
 `theme.json`. Vaihtoehtoisesti saman sisällön voi tuoda suoraan
 UTF-8-muotoisesta `.json`-tiedostosta. Esimerkin JSON toimii mallina.
 
+Manageri tarkistaa lisäksi teeman `id`-, `name`-, `description`-, `author`-,
+`license`- ja `target`-tekstikentät. URL-osoitteet ja merkkauskieli hylätään,
+samoin paikallisten sääntöjen tunnistamat viittaukset huijauksiin,
+identiteettivarkauteen tai harhaanjohtavaan toisena esiintymiseen,
+hyväksikäyttöön, pornografiaan, vihasisältöön ja raakaan väkivaltaan.
+Tarkistus koskee tuontia, omien teemojen valikoiman lukua ja käyttöönottoa
+sekä ikkunasta että komentoriviltä.
+
+Aiemmin tuotu, tarkistuksessa hylätty teema jää pois valikoimasta.
+Sen tiedostoja ei poisteta, ja alkuperäisen ulkoasun palautus pysyy
+käytettävissä. Tavalliset synkät, goottilaiset ja kauhuun viittaavat värit,
+kallot, Pride sekä muu oman identiteetin ilmaisu ovat sallittuja.
+Suodatin voi hylätä asiallista tekstiä ja päästää sopimatonta tekstiä läpi.
+Virheellisen hylkäyksen yhteydessä käytä väripalettia kuvaavaa selkeää,
+neutraalia metatietoa. [Tarkemmat rajat ja esimerkit](CONTENT_POLICY.md).
+
 ## Suunnittele uusi paletti ChatGPT:llä
 
 1. Valitse **ChatGPT:n aloitusprompti**: uusi oma teema, Hiilin väriversio
@@ -80,6 +101,11 @@ UTF-8-muotoisesta `.json`-tiedostosta. Esimerkin JSON toimii mallina.
 Kopiointipainikkeella saat saman promptin avaamatta selainta.
 Jos verkkokeskustelu ei pysty tekemään ladattavaa tiedostoa, se voi antaa
 koko JSONin, jonka tallennat tekstieditorilla `.json`-tiedostoksi.
+
+Aloitusprompti pyytää yleiskäyttöön sopivaa sisältöä saman rajauksen mukaan.
+Manageri ei hallitse erillistä verkkokeskustelua, siellä muokattua promptia
+tai ChatGPT:n myöhempiä vastauksia. Paikallinen metatietotarkistus ei käytä
+verkkopalvelua, API-avainta tai maksullista moderointia eikä lisää telemetriaa.
 
 **Codexia tai OpenAI API -avainta ei tarvita.** Manageri ei lähetä viestiä
 ChatGPT-keskusteluun automaattisesti. Selaimeen valmistellaan yleinen prompti
@@ -146,8 +172,8 @@ chatgpt-ubuntu-theme-manager --print-prompt new --prompt-target 'Ubuntu 26.04 / 
 
 ## Lähdekoodi ja jakaminen
 
-Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.0-source.tar.gz`.
-Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.0-jakopaketti.zip`.
+Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.1-source.tar.gz`.
+Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.1-jakopaketti.zip`.
 Ohjelma ja sen omat pohjat ovat GPL 3 tai uudempi -lisenssillä.
 Metsäyö-esimerkkipaletti on CC0-1.0-lisenssillä. Omassa paletissa lisenssi
 ja tekijä ilmoitetaan sen JSON-tiedoissa.
@@ -159,6 +185,32 @@ projektin `dist/`-kansioon. Rakennus tarvitsee Pythonin lisäksi
 `dpkg-deb`-, `gtk-update-icon-cache`- ja `desktop-file-validate`-työkalut.
 
 ## Julkaisun tarkistukset
+
+Version 1.2.1 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
+
+- 16 paikallisen sisältötarkistuksen testiä ja 22 teemapaketin validointitestiä
+  läpäisivät. Mukana ovat estetyt ilmaukset, tavalliset sallitut aiheet,
+  Unicode-muunnelmat, kaikki tekstikentät, verkottomuus ja JSON/ZIP-tuonti.
+- Integraatiokokeessa käsin hylättäväksi muutettu metadata poistui valikoimasta
+  eikä teemaa voinut ottaa uudelleen käyttöön. Sen tiedostot ja alkuperäisen
+  ulkoasun palautus säilyivät. Viiden valmiin teeman ja Metsäyön vaihto,
+  tiedostojen palautus sekä virhetilanteen peruminen tarkistettiin myös.
+- Rakennetun paketin graafisessa kokeessa sisältöohje avautui, hylättävä tuonti
+  estettiin ja hylättävä kohdeteksti esti selaimen avauksen. Sallitun teeman
+  tuonti, käyttöönotto, palautus sekä URL:n ja leikepöydän vastaavuus toimivat
+  yksityisessä Xvfb/dconf-istunnossa. Tiedostovalitsin ja ulkoinen selain
+  korvattiin hallituilla vastauksilla; ChatGPT-viestiä ei lähetetty.
+- GTK 3-, GTK 4- ja GNOME 51:n Shell-jäsentimet hyväksyivät valmiiden teemojen
+  ja tuodun paletin tyylit. Asennuskoukun koe vahvisti päivityksen säilyttävän
+  ulkoasun. Järjestelmänvalvojan oikeuksilla tehtävää asennusta tai muita
+  Ubuntu-versioita ei kokeiltu.
+
+Nämä kokeet osoittavat määriteltyjen sääntöjen toiminnan testitapauksissa.
+Ne eivät osoita kattavaa sisällöntunnistusta tai lainmukaisuutta.
+
+Version 1.2.1 muutokset ja sen tarkistusten rajaus ovat tiedostossa
+[RELEASE_NOTES.md](RELEASE_NOTES.md). Alla ovat edellisen julkaisun
+todennetut tarkistukset.
 
 Versio 1.2.0 tarkistettiin Ubuntu 26.10 / GNOME 51 -koneella:
 

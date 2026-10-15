@@ -12,6 +12,7 @@ import engine
 from palettes import APP_NAME, VERSION, all_palettes, palette
 from theme_packs import import_theme as import_theme_pack
 from chatgpt_prompts import PROMPTS, build_prompt, chatgpt_url, system_target
+from content_policy import ContentPolicyError, POLICY_SUMMARY
 
 
 def gui():
@@ -44,6 +45,10 @@ def gui():
             about.set_tooltip_text("Tietoja ohjelmasta")
             about.connect("clicked", lambda *_: self.show_about())
             header.pack_end(about)
+            self.policy_button = Gtk.Button.new_from_icon_name("security-high-symbolic")
+            self.policy_button.set_tooltip_text("Teemojen sisällön rajaus")
+            self.policy_button.connect("clicked", lambda *_: self.show_policy())
+            header.pack_end(self.policy_button)
             toolbar.add_top_bar(header)
             self.window.set_content(toolbar)
             scroller = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
@@ -198,6 +203,8 @@ def gui():
                     file = chooser.open_finish(result)
                     if file:
                         self.import_from_path(file.get_path())
+                except ContentPolicyError as error:
+                    self.policy_error(error)
                 except GLib.Error as error:
                     if error.matches(Gtk.DialogError.quark(), Gtk.DialogError.DISMISSED):
                         return
@@ -210,6 +217,18 @@ def gui():
             dialog = Adw.AlertDialog(heading="Teemaa ei voitu tuoda", body=message)
             dialog.add_response("close", "Sulje")
             dialog.present(self.window)
+
+        def show_policy(self):
+            dialog = Adw.AlertDialog(heading="Yleiskäyttöön sopivat teemat", body=POLICY_SUMMARY + "\n\nTarkistus tunnistaa määriteltyjä ilmauksia teemojen tekstitiedoista. Se voi erehtyä eikä valvo erillistä verkkokeskustelua tai takaa lainmukaisuutta. Tavalliset gootti-, kauhu- ja identiteettiä ilmaisevat väriteemat ovat sallittuja.")
+            dialog.add_response("close", "Sulje")
+            dialog.present(self.window)
+            return dialog
+
+        def policy_error(self, error):
+            dialog = Adw.AlertDialog(heading="Sisällön rajaus esti toiminnon", body=str(error) + "\n\nSisältöohjeen voi avata yläpalkin kilpipainikkeesta.")
+            dialog.add_response("close", "Sulje")
+            dialog.present(self.window)
+            return dialog
 
         def choose_theme(self, button, key):
             if not button.get_active():
@@ -236,12 +255,19 @@ def gui():
 
         def copy_prompt(self):
             kind = self.selected_prompt()
-            Gdk.Display.get_default().get_clipboard().set(build_prompt(kind, self.prompt_target.get_text()))
+            try:
+                prompt = build_prompt(kind, self.prompt_target.get_text())
+            except ContentPolicyError as error:
+                self.policy_error(error)
+                return None
+            Gdk.Display.get_default().get_clipboard().set(prompt)
             self.info.set_label("Aloitusprompti kopioitiin. Voit liittää sen ChatGPT:hen komennolla Ctrl+V.")
             return kind
 
         def launch_chatgpt(self):
             kind = self.copy_prompt()
+            if kind is None:
+                return
             try:
                 if not Gio.AppInfo.launch_default_for_uri(chatgpt_url(kind, self.prompt_target.get_text()), None):
                     raise RuntimeError("Oletusselain ei avautunut.")

@@ -17,6 +17,7 @@ import tempfile
 import unicodedata
 import zipfile
 import zlib
+from content_policy import validate_content
 
 
 PACK_FORMAT = "chatgpt-ubuntu-theme"
@@ -94,7 +95,7 @@ def validate_manifest(value):
         raise ValueError("Tämä teemapakettiversio tukee tummia paletteja: tekstin #e3e8ec kontrastin pitää olla vähintään 4.5:1 kaikkiin seitsemään pohjaväriin.")
     if _contrast("#f3f6f6", colors["accent_bg"]) < 4.5:
         raise ValueError("Painiketekstin #f3f6f6 kontrastin pitää olla vähintään 4.5:1 väriin accent_bg.")
-    return {
+    canonical = {
         "format": PACK_FORMAT, "version": PACK_VERSION, "id": identifier,
         "name": _string(value["name"], "name", 80, nonempty=True),
         "description": _string(value["description"], "description", 600),
@@ -104,6 +105,8 @@ def validate_manifest(value):
         "accent": accent, "sample": sample.lower(),
         "colors": {key: colors[key].lower() for key in COLOR_KEYS},
     }
+    validate_content(canonical)
+    return canonical
 
 
 def _unique_object(pairs):

@@ -3,7 +3,7 @@ __pycache__/
 /package/
 /dist/
 /test-artifacts/
-/tools/
+/tools
 /tests/hiili-*/
 /tests/manager-hooks-*/
 /tests/package-cli-*/

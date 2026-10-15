@@ -130,11 +130,29 @@ listed = subprocess.run([sys.executable, str(command), "--list-themes"], capture
 assert json.loads(listed.stdout)[key]["name"] == "Metsäyö"
 persisted = subprocess.run([sys.executable, str(command), "--status-json"], capture_output=True, text=True, check=True)
 assert json.loads(persisted.stdout)["variant"] == key
+installed_manifest = engine.SHARE / "hiili-theme/imported/metsayo/theme.json"
+original_manifest = installed_manifest.read_bytes()
+changed_manifest = json.loads(original_manifest)
+changed_manifest["name"] = "Explicit pornography"
+installed_manifest.write_text(json.dumps(changed_manifest))
+assert key not in engine.all_palettes(), "Changed content bypassed catalog validation"
+state_bytes = engine.STATE_FILE.read_bytes()
+assert engine.status()["backup_available"], "Hidden metadata disabled appearance restoration"
+try:
+    engine.apply(variant=key)
+except ValueError:
+    pass
+else:
+    raise AssertionError("Changed metadata bypassed activation validation")
+assert engine.STATE_FILE.read_bytes() == state_bytes
+assert interface.get_string("gtk-theme") == selected["theme"]
 engine.restore()
+installed_manifest.write_bytes(original_manifest)
 assert interface.get_string("icon-theme") == "Original-Test-Icons"
 for name, content in original_files.items():
     assert Path(name).read_bytes() == content
 print("PASS: imported palette persists, applies matching CSS/icons/wallpaper and restores without a new launcher")
+print("PASS: changed unsafe metadata cannot be selected or applied; original appearance still restores")
 
 # Restore original symlinks rather than replacing them with regular files.
 css.unlink()
