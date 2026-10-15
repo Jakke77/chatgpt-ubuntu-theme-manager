@@ -2,7 +2,7 @@
 
 Tumma teemanhallinta Ubuntu/GNOME-työpöydälle. Vaihda viiden valmiin ulkoasun välillä tai tuo ChatGPT:llä suunniteltu oma väripaletti samaan valikoimaan. Uudelle teemalle ei synny erillistä sovelluskuvaketta.
 
-**[Lataa asennuspaketti ja esimerkkiteema uusimmasta julkaisusta](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/latest)** · **[Lataa version 1.2.1 asentaja (.deb)](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.1/chatgpt-ubuntu-theme-manager_1.2.1_all.deb)**
+**[Lataa asennuspaketti ja esimerkkiteema uusimmasta julkaisusta](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/latest)** · **[Lataa version 1.2.2 asentaja (.deb)](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.2/chatgpt-ubuntu-theme-manager_1.2.2_all.deb)**
 
 ## Julkaistu sellaisenaan — käyttö omalla vastuulla
 
@@ -12,9 +12,9 @@ Ohjelma jaetaan ilman takuuta [GPL 3 tai uudempi -lisenssin](LICENSE) ehtojen mu
 
 Tämä on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 
-![ChatGPT Ubuntu Theme Manager ja tuotu Metsäyö-paletti](docs/screenshots/manager-1.2.1.png)
+![ChatGPT Ubuntu Theme Manager ja tuotu Metsäyö-paletti](docs/screenshots/manager-1.2.2.png)
 
-*Kuva eristetystä testistä. Kohdejärjestelmän kentässä on esimerkkipyyntö toiselle Ubuntu-versiolle.*
+*Kuva eristetystä testistä. Koneesta haetut versiotiedot näkyvät kopioitavana raporttina kohdejärjestelmän alla.*
 
 ## Mitä ohjelma tekee?
 
@@ -23,7 +23,8 @@ Tämä on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 - Omien tummien väripalettien tuonti `.ctm-theme.zip`- tai `.json`-tiedostosta managerin samaan teemavalikoimaan.
 - Esikatselu ennen käyttöönottoa sekä ensimmäistä käyttöönottoa edeltäneen ulkoasun palautus.
 - Valmiit ChatGPT-promptit, jotka kysyvät ensin käyttäjän toiveet ja pyytävät lopuksi managerin ymmärtämää teematiedostoa.
-- Muokattava Ubuntu/GNOME-kohdejärjestelmä promptia varten.
+- Muokattava Ubuntu/GNOME-kohdejärjestelmä promptia varten sekä **Hae koneen tiedot** -painike paikallisten versiotietojen hakemiseen.
+- Kopioitava järjestelmätietoraportti, joka liitetään samaa konetta varten tehtävän promptin sekä leikepöytätekstiin että ChatGPT-linkkiin.
 - Paikallinen yleiskäyttöön sopiva sisältörajaus teemapakettien metatiedoille ja vastaava rajaus ChatGPT-promptissa. Katso [mitä tarkistetaan ja mitkä ovat rajat](CONTENT_POLICY.md).
 
 **Codexia tai OpenAI API -avainta ei tarvita.** ChatGPT avataan tavallisessa selaimessa. Käyttäjä tarkistaa ja lähettää promptin itse; manageri ei lähetä viestiä keskusteluun automaattisesti. Prompti kopioidaan myös leikepöydälle.
@@ -48,10 +49,10 @@ Kohdejärjestelmän tekstikentän tai teeman `target`-kentän vaihtaminen auttaa
 3. Avaa ladattu paketti kaksoisnapsauttamalla. Valitse paketin asennusohjelmassa **Asenna** tai **Päivitä** ja anna pyydetty salasana.
 4. Avaa sovellusvalikosta **ChatGPT Ubuntu Theme Manager**.
 
-Vaihtoehtoisesti aja komento hakemistossa, johon version 1.2.1 paketti on ladattu:
+Vaihtoehtoisesti aja komento hakemistossa, johon version 1.2.2 paketti on ladattu:
 
 ```bash
-sudo apt install ./chatgpt-ubuntu-theme-manager_1.2.1_all.deb
+sudo apt install ./chatgpt-ubuntu-theme-manager_1.2.2_all.deb
 ```
 
 Ensimmäinen asennus yrittää ottaa Hiili-ulkoasun käyttöön aktiiviselle paikalliselle työpöytäkäyttäjälle. Teeman voi ottaa käyttöön myös managerin painikkeella. **Päivitys säilyttää nykyisen ulkoasun ja alkuperäisen palautuskopion.**
@@ -66,7 +67,7 @@ Sulje ja avaa jo käynnissä olevat sovellukset tarvittaessa, jotta niiden väri
 
 ## Kokeile oman teeman tuontia
 
-1. Lataa julkaisusta [Metsayo.ctm-theme.zip](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.1/Metsayo.ctm-theme.zip) tai [Metsayo.theme.json](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.1/Metsayo.theme.json).
+1. Lataa julkaisusta [Metsayo.ctm-theme.zip](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.2/Metsayo.ctm-theme.zip) tai [Metsayo.theme.json](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/download/v1.2.2/Metsayo.theme.json).
 2. Paina managerissa **Tuo teema…** ja valitse ladattu tiedosto.
 3. **Metsäyö** ilmestyy teemavalikoimaan ja sen esikatselu avautuu.
 4. Paina **Ota valittu teema käyttöön**.
@@ -82,14 +83,17 @@ Samat tarkistukset koskevat myös aiemmin tuotuja paletteja. Hylätty vanha pale
 ## Suunnittele paletti ChatGPT:llä
 
 1. Valitse **ChatGPT:n aloitusprompti**: uusi oma teema, Hiilin väriversio tai oma Ubuntu Dark.
-2. Tarkista **Teeman kohdejärjestelmä**. Kenttä täyttyy paikallisesta Ubuntu- ja GNOME-versiosta, mutta voit kirjoittaa toisen kohteen.
-3. Paina **Tee uusia teemoja ChatGPT:llä**. Selain avautuu ja prompti kopioidaan leikepöydälle. Jos teksti puuttuu keskustelun kentästä, liitä se **Ctrl+V** ja lähetä itse.
-4. Vastaa ChatGPT:n aloituskysymyksiin ja tallenna lopuksi saamasi `.ctm-theme.zip`- tai `.json`-tiedosto.
-5. Tuo tiedosto manageriin **Tuo teema…** -painikkeella ja ota se käyttöön.
+2. Paina **Hae koneen tiedot**. Ohjelma päivittää **Teeman kohdejärjestelmä** -kenttään koneen Ubuntu- ja GNOME-version ja näyttää sen alla versiotietoraportin. **Kopioi tiedot** kopioi pelkän raportin tavallisena tekstinä.
+3. Tarkista kohdejärjestelmä. Voit kirjoittaa toisen kohteen, jolloin tämän koneen raportti jätetään pois promptista. Uusi **Hae koneen tiedot** -painallus palauttaa paikallisen kohteen ja päivittää raportin.
+4. Paina **Tee uusia teemoja ChatGPT:llä**. Selain avautuu ja koko prompti kopioidaan leikepöydälle. Kun kohde vastaa haettua konetta, mukaan tulevat samat raportin tiedot kuin esikatselussa. Jos teksti puuttuu keskustelun kentästä, liitä se **Ctrl+V** ja lähetä itse.
+5. Vastaa ChatGPT:n aloituskysymyksiin ja tallenna lopuksi saamasi `.ctm-theme.zip`- tai `.json`-tiedosto.
+6. Tuo tiedosto manageriin **Tuo teema…** -painikkeella ja ota se käyttöön.
 
 Kopiointipainike kopioi promptin avaamatta selainta. Jos ChatGPT ei pysty antamaan ladattavaa tiedostoa, tallenna sen tuottama kokonainen JSON tekstieditorilla `.json`-tiedostoksi. Manageri tarkistaa tiedostomuodon, paletin kontrastirajat ja metatietojen paikalliset sisältösäännöt tuonnissa. Prompti pyytää yleiskäyttöön sopivaa teemaa; manageri ei hallitse erillistä ChatGPT-keskustelua tai sen myöhempiä vastauksia.
 
-Selaimelle valmistellaan prompti ja kohdeympäristön julkinen versiotieto. Paikallisia tiedostoja tai palautuskopioita ei liitetä keskusteluun. Aiemmalla promptilla tehtyä erillistä `.deb`-teemasovellusta ei voi tuoda suoraan; sen väripaletti on ensin muunnettava tähän teemapakettimuotoon.
+**Hae koneen tiedot** lukee paikallisesti käyttöjärjestelmän, GNOME Shellin, GTK 4:n, libadwaitan, Yarun GTK-, Shell- ja kuvakepakettien sekä managerin versiot ja istuntotyypin (Wayland/X11). Jos tietoa ei saada, raportti näyttää sen puuttuvan. Tietojen haku ei käytä verkkopalvelua eikä vaadi salasanaa. Raporttiin ei kerätä käyttäjätunnusta, kotihakemistoa, koneen nimeä, laitteistotunnisteita tai verkkotietoja.
+
+Selaimelle valmistellaan tarkistettavissa oleva prompti ja mahdollinen paikallinen versiotietoraportti. Sama valmis teksti kopioidaan koko promptin kopiointipainikkeesta ja valmistellaan ChatGPT-linkkiin. Paikallisia tiedostoja tai palautuskopioita ei liitetä keskusteluun. Aiemmalla promptilla tehtyä erillistä `.deb`-teemasovellusta ei voi tuoda suoraan; sen väripaletti on ensin muunnettava tähän teemapakettimuotoon.
 
 ## Palauta aiempi ulkoasu tai poista ohjelma
 
@@ -119,7 +123,7 @@ chatgpt-ubuntu-theme-manager --print-prompt new --prompt-target 'Ubuntu 26.04 / 
 
 ## Lähdekoodi, rakentaminen ja tarkistukset
 
-Lähdekoodi on tässä repositoriossa ja [julkaisun lähdearkistossa](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/tag/v1.2.1). Rakenna kohdeympäristössä:
+Lähdekoodi on tässä repositoriossa ja [julkaisun lähdearkistossa](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/tag/v1.2.2). Rakenna kohdeympäristössä:
 
 ```bash
 python3 build.py
@@ -129,7 +133,7 @@ Valmis `.deb` syntyy `dist/`-hakemistoon. Rakennus tarvitsee Pythonin lisäksi `
 
 Versiota 1.2.0 on tarkistettu Ubuntu 26.10 / GNOME 51 -järjestelmässä: teemapaketin validointitestit, viiden valmiin teeman ja tuodun paletin käyttöönotto ja palautus, GTK 3/GTK 4/Shell-tyylien jäsennys sekä erillisen Xvfb/dconf-istunnon graafinen kokeilu. Testiasetukset pidettiin erillään varsinaisesta työpöydästä. Tiedostovalitsin ja selaimen avaus korvattiin graafisessa testissä hallituilla vastauksilla, eikä viestiä lähetetty ChatGPT-keskusteluun. Rakennetun paketin asennuskoukut ja sisältö tarkistettiin; tämän julkaisun `.deb`-asennusta järjestelmänvalvojana tai muita Ubuntu-versioita ei kokeiltu julkaisun valmistelussa.
 
-Version 1.2.1 muutokset ja sen tarkistusten rajaus kuvataan [julkaisutiedoissa](RELEASE_NOTES.md). Paikallinen sisältötarkistus ei käytä verkkopalvelua, API-avainta tai maksullista moderointia eikä lisää telemetriaa.
+Version 1.2.2 muutokset ja tarkistusten rajaus kuvataan [julkaisutiedoissa](RELEASE_NOTES.md). Aiemman 1.2.1-julkaisun sisältörajaus säilyy mukana. Paikallinen sisältötarkistus ei käytä verkkopalvelua, API-avainta tai maksullista moderointia eikä lisää telemetriaa.
 
 ## Lisenssit
 
@@ -139,7 +143,9 @@ Ohjelma ja sen omat pohjat: **GPL-3.0-or-later**, katso [LICENSE](LICENSE). Mets
 
 An unofficial dark theme manager for Ubuntu/GNOME. Choose one of five bundled themes, import a data-only dark color palette, apply it from the same window, and restore the previous appearance. ChatGPT prompts help create compatible palette files; no Codex installation or OpenAI API key is required.
 
-Version 1.2.1 adds general-audience prompt boundaries and local plain-text metadata checks against recognized patterns of fraud, deceptive impersonation, exploitation, pornography, hate and graphic violence. This is a limited deterministic filter, not a universal classifier or legal-compliance guarantee. No network moderation, API key or telemetry is used. See [CONTENT_POLICY.md](CONTENT_POLICY.md) for examples, limitations and the effect on previously imported palettes.
+Version 1.2.2 adds a **Hae koneen tiedot** button to collect a local version report for Ubuntu, GNOME, GTK 4, libadwaita, Yaru and the manager, plus the Wayland/X11 session type. The displayed report can be copied separately and is included in both the copied prompt and the prepared ChatGPT URL when the target still matches the detected machine. Editing the target for another system excludes the host report. No user name, home directory, host name, hardware identifiers or network details are collected. Collection is local and does not use an API.
+
+Version 1.2.1 added general-audience prompt boundaries and local plain-text metadata checks against recognized patterns of fraud, deceptive impersonation, exploitation, pornography, hate and graphic violence. This is a limited deterministic filter, not a universal classifier or legal-compliance guarantee. No network moderation, API key or telemetry is used. See [CONTENT_POLICY.md](CONTENT_POLICY.md) for examples, limitations and the effect on previously imported palettes.
 
 Version 1.2.0 was tested on Ubuntu 26.10 / GNOME 51 with isolated desktop settings; see [release notes](RELEASE_NOTES.md) for this update's checks. Ubuntu 26.04 meets the library requirements but has not been tested; Ubuntu 24.04 is not supported by this package. Download the `.deb` from [Releases](https://github.com/Jakke77/chatgpt-ubuntu-theme-manager/releases/latest). The technical package name is `hiili-theme` for upgrade compatibility.
 

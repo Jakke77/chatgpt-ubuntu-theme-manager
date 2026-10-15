@@ -1,4 +1,4 @@
-# ChatGPT Ubuntu Theme Manager 1.2.1
+# ChatGPT Ubuntu Theme Manager 1.2.2
 
 > Projekti jaetaan sellaisenaan. Käyttö on omalla vastuulla. Jatkuvaa ylläpitoa,
 > tukea tai tulevaa yhteensopivuutta ei luvata. Katso [ylläpitolinjaus](SUPPORT.md).
@@ -9,15 +9,16 @@ samaan teemavalikoimaan. Oma teema ei tee sovellusvalikkoon uutta kuvaketta.
 
 Ohjelma on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 
-Versio 1.2.1 lisää yleiskäyttöön sopivan sisältörajauksen aloituspromptteihin
-ja teemapakettien metatietojen paikallisen tarkistuksen. Se ei ole kattava
-sisällöntunnistin tai lainmukaisuuden tae. Katso [sisältölinjaus ja sen
-rajat](CONTENT_POLICY.md).
+Versio 1.2.2 lisää **Hae koneen tiedot** -painikkeen ja kopioitavan
+versiotietoraportin teeman kohdejärjestelmän alle. Samat tiedot liitetään
+paikallista konetta varten tehtävään ChatGPT-promptiin. Version 1.2.1
+yleiskäyttöön sopiva sisältörajaus ja metatietojen paikallinen tarkistus
+säilyvät mukana. Katso [sisältölinjaus ja sen rajat](CONTENT_POLICY.md).
 
 ## Asennus ja päivitys klikkaamalla
 
 1. Sulje aiemmin avoinna oleva Hiili- tai Theme Manager -ikkuna.
-2. Avaa `chatgpt-ubuntu-theme-manager_1.2.1_all.deb` kaksoisnapsauttamalla sitä.
+2. Avaa `chatgpt-ubuntu-theme-manager_1.2.2_all.deb` kaksoisnapsauttamalla sitä.
 3. Valitse paketin asennusohjelmassa **Asenna** tai **Päivitä** ja anna pyydetty salasana.
 4. Avaa sovellusvalikosta **ChatGPT Ubuntu Theme Manager**.
 
@@ -87,18 +88,22 @@ neutraalia metatietoa. [Tarkemmat rajat ja esimerkit](CONTENT_POLICY.md).
 
 1. Valitse **ChatGPT:n aloitusprompti**: uusi oma teema, Hiilin väriversio
    tai oma Ubuntu Dark.
-2. Tarkista kohdeympäristön kenttä. Ohjelma täyttää siihen paikallisen
-   Ubuntu- ja GNOME-version; voit kirjoittaa myös toisen kohteen,
-   esimerkiksi `Ubuntu 26.04 / GNOME`.
-3. Paina **Tee uusia teemoja ChatGPT:llä**.
-4. ChatGPT avautuu oletusselaimessa. Prompti kopioidaan myös leikepöydälle.
-   Jos teksti ei näy kirjoituskentässä tai kirjautuminen kadottaa sen,
-   liitä se komennolla **Ctrl+V** ja lähetä itse.
+2. Paina **Hae koneen tiedot**. Ohjelma päivittää kohdejärjestelmän kenttään
+   koneen Ubuntu- ja GNOME-version sekä näyttää alla kopioitavan raportin.
+   **Kopioi tiedot** kopioi pelkän raportin tavallisena tekstinä.
+3. Tarkista **Teeman kohdejärjestelmä**. Voit kirjoittaa myös toisen kohteen,
+   esimerkiksi `Ubuntu 26.04 / GNOME`. Tällöin paikallisen koneen raportti
+   jätetään pois promptista, jotta eri ympäristöjen tiedot eivät sekoitu.
+4. Paina **Tee uusia teemoja ChatGPT:llä**. ChatGPT avautuu oletusselaimessa
+   ja koko prompti kopioidaan leikepöydälle. Paikallista kohdetta käytettäessä
+   mukana on sama raportti, joka näkyy ikkunassa. Jos teksti puuttuu
+   kirjoituskentästä tai kirjautuminen kadottaa sen, liitä **Ctrl+V** ja lähetä itse.
 5. Vastaa ChatGPT:n neljään aloituskysymykseen. Prompti pyytää lopuksi
    manageriin tuotavan `.ctm-theme.zip`- tai `.json`-tiedoston.
 6. Tallenna valmis tiedosto ja tuo se managerin **Tuo teema…** -painikkeella.
 
-Kopiointipainikkeella saat saman promptin avaamatta selainta.
+Promptin kopiointipainikkeella saat saman koko tekstin avaamatta selainta.
+**Kopioi tiedot** kopioi vain näkyvän järjestelmätietoraportin.
 Jos verkkokeskustelu ei pysty tekemään ladattavaa tiedostoa, se voi antaa
 koko JSONin, jonka tallennat tekstieditorilla `.json`-tiedostoksi.
 
@@ -107,9 +112,21 @@ Manageri ei hallitse erillistä verkkokeskustelua, siellä muokattua promptia
 tai ChatGPT:n myöhempiä vastauksia. Paikallinen metatietotarkistus ei käytä
 verkkopalvelua, API-avainta tai maksullista moderointia eikä lisää telemetriaa.
 
+**Hae koneen tiedot** lukee paikallisesti käyttöjärjestelmän, GNOME Shellin,
+GTK 4:n, libadwaitan, Yarun GTK-, Shell- ja kuvakepakettien sekä managerin
+versiot ja istuntotyypin (Wayland/X11). Puuttuva tieto ilmoitetaan raportissa.
+Haku ei käytä verkkopalvelua eikä vaadi järjestelmänvalvojan salasanaa.
+Raportti ei sisällä käyttäjätunnusta, kotihakemistoa, koneen nimeä,
+laitteistotunnisteita tai verkkotietoja.
+
+Raportti pysyy samana esikatselussa ja molempien promptipainikkeiden
+tuottamassa tekstissä. Uusi **Hae koneen tiedot** päivittää raportin ja
+palauttaa kohdekenttään tämän koneen version. Jos muokkaat kohdekenttää,
+raportti jää katseltavaksi ja kopioitavaksi mutta sitä ei liitetä promptiin,
+ennen kuin kenttä vastaa jälleen haettua paikallista kohdetta.
+
 **Codexia tai OpenAI API -avainta ei tarvita.** Manageri ei lähetä viestiä
-ChatGPT-keskusteluun automaattisesti. Selaimeen valmistellaan yleinen prompti
-ja kohdeympäristön julkinen versiotieto, jonka voit tarkistaa ja muokata.
+ChatGPT-keskusteluun automaattisesti. Tarkista valmis teksti ennen lähettämistä.
 Paikallisia tiedostoja tai palautuskopioita ei liitetä keskusteluun.
 
 Aiemmalla promptilla tehtyä erillistä `.deb`-teemasovellusta ei voi tuoda
@@ -172,8 +189,8 @@ chatgpt-ubuntu-theme-manager --print-prompt new --prompt-target 'Ubuntu 26.04 / 
 
 ## Lähdekoodi ja jakaminen
 
-Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.1-source.tar.gz`.
-Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.1-jakopaketti.zip`.
+Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.2-source.tar.gz`.
+Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.2-jakopaketti.zip`.
 Ohjelma ja sen omat pohjat ovat GPL 3 tai uudempi -lisenssillä.
 Metsäyö-esimerkkipaletti on CC0-1.0-lisenssillä. Omassa paletissa lisenssi
 ja tekijä ilmoitetaan sen JSON-tiedoissa.
@@ -185,6 +202,28 @@ projektin `dist/`-kansioon. Rakennus tarvitsee Pythonin lisäksi
 `dpkg-deb`-, `gtk-update-icon-cache`- ja `desktop-file-validate`-työkalut.
 
 ## Julkaisun tarkistukset
+
+Version 1.2.2 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
+
+- 13 versiotietojen ja promptin testiä sekä aiemmat 16 sisältötarkistuksen
+  ja 22 teemapaketin testiä läpäisivät (yhteensä 51). Mukana ovat puuttuvat
+  paketit, osittainen kyselytulos, aikakatkaisu, virheelliset versiot,
+  yksityisten lisäkenttien torjunta sekä raportin tarkka URL-vastaavuus.
+- Rakennetun paketin graafisessa kokeessa Hae koneen tiedot päivitti kentän
+  ja raportin. Kopioi tiedot kopioi näkyvän raportin. Koko promptin leikepöytä
+  ja ChatGPT-linkki sisälsivät saman haetun raportin. Toisen Ubuntu-version
+  kirjoittaminen jätti tämän koneen raportin pois, ja uusi haku palautti sen.
+- Samassa yksityisessä Xvfb/dconf-istunnossa teeman tuonti, sisältörajaus,
+  käyttöönotto ja aiemman ulkoasun palautus toimivat. Tiedostovalitsin ja
+  ulkoisen selaimen avaus korvattiin hallituilla vastauksilla; verkkokeskusteluun
+  ei lähetetty viestiä.
+- Integraatio-, GTK 3/GTK 4/GNOME Shell -tyyli- ja asennuskoukkutarkistukset
+  läpäisivät. Järjestelmänvalvojan oikeuksilla tehtävää asennusta ja muita
+  Ubuntu-versioita ei ajettu. Todellisen koneen versiot luettiin paikallisesti.
+
+Version 1.2.2 muutokset ja tämän päivityksen tarkistusten rajaus ovat
+tiedostossa [RELEASE_NOTES.md](RELEASE_NOTES.md). Alla säilytetään aiempien
+julkaisujen todennetut tarkistukset.
 
 Version 1.2.1 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
 
@@ -207,10 +246,6 @@ Version 1.2.1 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:
 
 Nämä kokeet osoittavat määriteltyjen sääntöjen toiminnan testitapauksissa.
 Ne eivät osoita kattavaa sisällöntunnistusta tai lainmukaisuutta.
-
-Version 1.2.1 muutokset ja sen tarkistusten rajaus ovat tiedostossa
-[RELEASE_NOTES.md](RELEASE_NOTES.md). Alla ovat edellisen julkaisun
-todennetut tarkistukset.
 
 Versio 1.2.0 tarkistettiin Ubuntu 26.10 / GNOME 51 -koneella:
 

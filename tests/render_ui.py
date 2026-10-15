@@ -72,7 +72,7 @@ try:
             time.sleep(.1)
         report = json.loads((fixture / "smoke.json").read_text())
         assert report["ok"], report
-        print("PASS: real GUI rejects unsafe metadata, imports a valid ZIP, applies and restores palettes; URL and clipboard match")
+        print("PASS: GUI detects and copies system versions, includes the same report in prompt and URL, handles another target, and applies/restores themes")
     else:
         time.sleep(2)
     if app.poll() is not None:

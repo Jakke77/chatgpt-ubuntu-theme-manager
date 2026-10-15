@@ -20,6 +20,7 @@ import engine
 from chatgpt_prompts import build_prompt
 from theme_packs import example_manifest
 from content_policy import ContentPolicyError
+from system_info import format_system_info, system_target
 
 result_file = Path(sys.argv[1])
 original_theme = engine.settings("org.gnome.desktop.interface").get_string("gtk-theme")
@@ -101,22 +102,62 @@ def step():
         elif stage == 2 and application.apply_button.get_sensitive():
             assert engine.status()["variant"] == "ubuntu", engine.status()
             application.prompt_choice.set_selected(1)
-            application.prompt_target.set_text("Ubuntu 26.04 / GNOME 50")
+            application.detect_button.emit("clicked")
+            assert not application.detect_button.get_sensitive()
+            stage = 20
+        elif stage == 20 and application.detect_button.get_sensitive():
+            assert application.system_details is not None
+            assert application.system_report_box.get_visible()
+            report_text = format_system_info(application.system_details)
+            assert application.system_report.get_text() == report_text
+            assert application.prompt_target.get_text() == system_target(application.system_details)
+            assert "GTK 4:" in report_text and "libadwaita:" in report_text and "Istunto:" in report_text
+            assert "Yaru GNOME Shell:" in report_text
+            assert "/home/" not in report_text
+            application.copy_system_button.emit("clicked")
+            def check_system_clipboard(clipboard, result):
+                global stage
+                try:
+                    assert clipboard.read_text_finish(result) == report_text
+                    stage = 21
+                except Exception:
+                    report_error = traceback.format_exc()
+                    result_file.write_text(json.dumps({"ok": False, "error": report_error}))
+            Gdk.Display.get_default().get_clipboard().read_text_async(None, check_system_clipboard)
+            stage = 22
+        elif stage == 21:
             application.chatgpt_button.emit("clicked")
             assert len(captured) == 1
             url = urlparse(captured[0])
             assert url.scheme == "https" and url.netloc == "chatgpt.com"
-            assert parse_qs(url.query)["q"] == [build_prompt("variant", "Ubuntu 26.04 / GNOME 50")]
-            def check_clipboard(clipboard, result):
+            expected = build_prompt("variant", application.prompt_target.get_text(), application.system_details)
+            assert parse_qs(url.query)["q"] == [expected]
+            assert format_system_info(application.system_details) in expected
+            def check_prompt_clipboard(clipboard, result):
                 global stage
                 try:
-                    assert clipboard.read_text_finish(result) == build_prompt("variant", "Ubuntu 26.04 / GNOME 50")
-                    application.restore_button.emit("clicked")
-                    stage = 4
+                    assert clipboard.read_text_finish(result) == expected
+                    stage = 23
                 except Exception:
                     report(traceback.format_exc())
-            Gdk.Display.get_default().get_clipboard().read_text_async(None, check_clipboard)
-            stage = 3
+            Gdk.Display.get_default().get_clipboard().read_text_async(None, check_prompt_clipboard)
+            stage = 24
+        elif stage == 23:
+            application.prompt_target.set_text("Ubuntu 24.04 / GNOME 46")
+            assert application.system_details_for_prompt() is None
+            assert "ei liitetä" in application.system_report_hint.get_text()
+            application.chatgpt_button.emit("clicked")
+            assert len(captured) == 2
+            expected = build_prompt("variant", "Ubuntu 24.04 / GNOME 46")
+            assert parse_qs(urlparse(captured[-1]).query)["q"] == [expected]
+            assert "Koneelta haetut teeman yhteensopivuustiedot" not in expected
+            application.detect_button.emit("clicked")
+            stage = 25
+        elif stage == 25 and application.detect_button.get_sensitive():
+            assert application.prompt_target.get_text() == system_target(application.system_details)
+            assert application.system_details_for_prompt() is not None
+            application.restore_button.emit("clicked")
+            stage = 4
         elif stage == 4 and application.apply_button.get_sensitive():
             assert engine.settings("org.gnome.desktop.interface").get_string("gtk-theme") == original_theme
             assert not engine.status()["backup_available"]

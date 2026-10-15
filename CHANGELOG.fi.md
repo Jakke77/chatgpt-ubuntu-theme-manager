@@ -1,3 +1,29 @@
+# ChatGPT Ubuntu Theme Manager 1.2.2 — koneen versiotiedot
+
+- **Hae koneen tiedot** päivittää teeman kohdejärjestelmän paikallisesta
+  Ubuntu- ja GNOME-versiosta ja näyttää kopioitavan raportin.
+- Raporttiin tulevat käyttöjärjestelmä, GNOME Shell, GTK 4, libadwaita,
+  Yarun GTK-, Shell- ja kuvakepaketit, managerin versio ja Wayland/X11-istuntotyyppi.
+  Puuttuva tieto ilmoitetaan raportissa.
+- **Kopioi tiedot** kopioi raportin tavallisena tekstinä. Sama näkyvä raportti
+  sisältyy koko promptin kopioon ja ChatGPT-linkin promptiin, kun kohdekenttä
+  vastaa haettua paikallista kohdetta.
+- Toiselle järjestelmälle muokattu kohde jättää tämän koneen raportin pois
+  promptista. Raportti säilyy erikseen katseltavana ja kopioitavana.
+  Uusi tietojen haku päivittää raportin ja palauttaa paikallisen kohteen.
+- Haku toimii paikallisena lukutoimintona ilman verkkopalvelua tai salasanaa.
+  Raporttiin ei kerätä käyttäjätunnusta, kotihakemistoa, koneen nimeä,
+  laitteistotunnisteita tai verkkotietoja.
+- Sisältörajaus, väripaletin tiedostomuoto, teeman käyttöönotto ja palautus,
+  GPL-lisenssi ja ylläpitolinjaus säilyvät ennallaan.
+
+51 versiopromptin, sisällön ja tiedostomuodon testiä sekä graafinen
+haku-, kopiointi- ja teemanvaihtokoe läpäisivät. Myös integraatio-, tyyli- ja
+asennuskoukkutarkistukset läpäisivät Ubuntu 26.10 / GNOME 51 -ympäristössä.
+
+Tämän päivityksen tarkistusten rajaus on [julkaisutiedoissa](RELEASE_NOTES.md).
+Alla säilyvät aiempien julkaisujen todennetut tarkistukset.
+
 # ChatGPT Ubuntu Theme Manager 1.2.1 — sisällön rajaus
 
 - Yleiskäyttöön sopivan sisällön ohje lisättiin kaikkiin kolmeen ChatGPT-promptiin.

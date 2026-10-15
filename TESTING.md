@@ -10,7 +10,7 @@ sudo apt install python3 dpkg libgtk-3-bin desktop-file-utils
 python3 build.py
 ```
 
-The result is `dist/chatgpt-ubuntu-theme-manager_1.2.1_all.deb`.
+The result is `dist/chatgpt-ubuntu-theme-manager_1.2.2_all.deb`.
 Generated data in `package/` is ignored by Git. Building does not apply a
 theme or modify the active desktop.
 
@@ -24,9 +24,16 @@ used by the native style parser checks. Run the checks in this order:
 python3 build.py
 python3 tests/theme_packs_test.py
 python3 tests/content_policy_test.py
+python3 tests/system_info_test.py
 python3 tests/integration.py
 python3 tests/release_checks.py
 ```
+
+`system_info_test.py` covers the local version report and its prompt handling.
+Use fixtures or stubbed command results for missing and malformed version
+output; the collector should not read personal identifiers or use a network
+service. A successful version query is evidence about the local machine only,
+not proof of compatibility on another Ubuntu release.
 
 `release_checks.py` uses the private generated fixture from `integration.py`.
 These fixtures live under `tests/hiili-*/` and do not use the active user's
@@ -43,7 +50,10 @@ python3 tests/render_ui.py --smoke
 
 This runs the built package's program files with private XDG directories, a
 private D-Bus session and a virtual X server. Theme import, palette selection,
-apply/restore and clipboard/URL matching are exercised. The system file picker
+apply/restore and clipboard/URL matching are exercised. The 1.2.2 workflow
+also checks system-information refresh, report display and copying, inclusion
+of the same displayed report in both prompt actions, and exclusion when the
+target is edited for another system. The system file picker
 and external browser launch are stubbed; the test never sends a ChatGPT message.
 Screenshots are saved under ignored `test-artifacts/`, or a directory set by
 `SCREENSHOT_OUTPUT_DIR`. Existing theme files and settings on the real desktop

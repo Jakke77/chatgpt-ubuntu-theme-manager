@@ -1,7 +1,7 @@
 """Shared palette catalog for the GTK, Shell, icon and wallpaper variants."""
 import re
 
-VERSION = "1.2.1"
+VERSION = "1.2.2"
 APP_NAME = "ChatGPT Ubuntu Theme Manager"
 PALETTES = {
     "hiili": {"name": "Hiili / Musta", "theme": "Hiili", "accent": "teal", "sample": "#11151a",

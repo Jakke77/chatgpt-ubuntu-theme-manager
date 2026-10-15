@@ -1,11 +1,8 @@
 """Public, editable interview prompts for the manager's data-only theme format."""
 import json
-from pathlib import Path
-import re
-import shlex
-import subprocess
 from urllib.parse import urlencode
 from content_policy import POLICY_PROMPT, validate_content
+from system_info import system_target, format_system_info, validate_system_info
 
 PROMPTS = {
     "new": ("Uusi oma teema", "Haluan suunnitella uuden oman tumman Ubuntu-väriteeman."),
@@ -14,35 +11,18 @@ PROMPTS = {
 }
 
 
-def system_target():
-    """Return public distribution and GNOME versions, never user or host details."""
-    distribution = "Linux"
-    try:
-        for line in Path("/etc/os-release").read_text(encoding="utf-8").splitlines():
-            if line.startswith("PRETTY_NAME="):
-                values = shlex.split(line.partition("=")[2])
-                if values:
-                    distribution = " ".join(values)[:120]
-                break
-    except (OSError, ValueError):
-        pass
-    try:
-        result = subprocess.run(
-            ["dpkg-query", "--show", "--showformat=${Version}", "gnome-shell"],
-            capture_output=True, text=True, timeout=2, check=False,
-        )
-        version = re.match(r"(?:\d+:)?(\d+(?:\.\d+){0,2})", result.stdout.strip())
-        if result.returncode == 0 and version:
-            return f"{distribution}, GNOME {version.group(1)}"
-    except (OSError, subprocess.SubprocessError):
-        pass
-    return distribution + "; työpöytäversio tarkennettava tarvittaessa"
-
-
-def build_prompt(kind="new", target=None):
+def build_prompt(kind="new", target=None, system_details=None):
     _title, goal = PROMPTS[kind]
     target = " ".join(str(target or system_target()).split())[:160]
     validate_content({"target": target})
+    environment = ""
+    if system_details is not None:
+        details = validate_system_info(system_details)
+        for value in details.values():
+            validate_content({"target": value})
+        environment = ("\nKoneelta haetut teeman yhteensopivuustiedot (asennettujen pakettien versiot):\n"
+                       + format_system_info(details)
+                       + "\nKäytä näitä kohdeympäristön versiotietoina. Tuntematon tarkoittaa, ettei tietoa voitu hakea; älä arvaa puuttuvia versioita.\n")
     example = {
         "format": "chatgpt-ubuntu-theme",
         "version": 1,
@@ -69,6 +49,7 @@ def build_prompt(kind="new", target=None):
 
 Tavoite: {goal}
 Kohdeympäristön lähtötieto: {target}. Voin tehdä paletin myös toiselle Ubuntu-versiolle. Tämä on julkinen versiotieto, ei laitteen tai käyttäjän tunniste.
+{environment}
 
 {POLICY_PROMPT}
 
@@ -106,6 +87,6 @@ Väripaletti voidaan käyttää eri Ubuntu/GNOME-versioissa, jos manageri ja sen
 Aloita nyt vain neljästä kysymyksestä ja odota vastauksiani."""
 
 
-def chatgpt_url(kind="new", target=None):
+def chatgpt_url(kind="new", target=None, system_details=None):
     # Sign-in can discard query text; the GUI also copies the public prompt.
-    return "https://chatgpt.com/?" + urlencode({"q": build_prompt(kind, target)})
+    return "https://chatgpt.com/?" + urlencode({"q": build_prompt(kind, target, system_details)})
