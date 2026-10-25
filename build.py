@@ -195,6 +195,9 @@ def generate_variants():
         for name in ("gtk3.css", "gtk4.css", "shell.css"):
             write(folder / name, recolor((DATA / name).read_text(), key))
         write(folder / "wallpaper.svg", recolor((DATA / "hiili.svg").read_text(), key))
+        if key == "veriyo":
+            for image in (BASE / "assets/veriyo").glob("*.png"):
+                shutil.copyfile(image, folder / image.name)
         preview = folder / "icon-preview"
         for path in (DATA / "icon-preview").glob("*.svg"):
             write(preview / path.name, recolor(path.read_text(), key, icons=True))
@@ -269,7 +272,7 @@ def build():
         Description: ChatGPT Ubuntu Theme Manager with importable dark palettes
          Finnish graphical manager for dark GTK and GNOME Shell themes,
          matching SVG icons, wallpapers and reversible appearance backups.
-         Includes five palettes, JSON theme import and ChatGPT prompt templates.
+         Includes six palettes, JSON theme import and ChatGPT prompt templates.
          Community project; not affiliated with OpenAI or Canonical.
     """)
     write(ROOT / "DEBIAN/postinst", """
@@ -329,6 +332,12 @@ def build():
     installed_size = sum(path.stat().st_size for path in (ROOT / "usr").rglob("*") if path.is_file() and not path.is_symlink())
     control = ROOT / "DEBIAN/control"
     control.write_text(control.read_text() + f"Installed-Size: {(installed_size + 1023) // 1024}\n")
+    # Copied source assets may have restrictive permissions in a cloud checkout.
+    # Installed theme files must remain readable to ordinary desktop users.
+    ROOT.chmod(0o755)
+    for path in ROOT.rglob("*"):
+        if not path.is_symlink():
+            path.chmod(0o755 if path.is_dir() or path.stat().st_mode & 0o111 else 0o644)
     checksums = []
     for path in sorted((ROOT / "usr").rglob("*")):
         if path.is_file() and not path.is_symlink():

@@ -77,7 +77,7 @@ engine.restore()
 assert interface.get_string("icon-theme") == "Original-Test-Icons"
 for name, content in original_files.items():
     assert Path(name).read_bytes() == content
-print("PASS: all five palettes switch and restore the original settings")
+print("PASS: all six palettes switch and restore the original settings")
 
 # A downloaded data-only theme becomes a persistent sixth palette, including
 # real GTK/Shell assets, icons and wallpaper, with no application launcher.
@@ -85,7 +85,7 @@ from theme_packs import example_manifest, import_theme
 download = fixture / "metsayo.json"
 download.write_text(json.dumps(example_manifest(), ensure_ascii=False))
 key, selected = import_theme(download)
-assert key == "user:metsayo" and len(engine.all_palettes()) == 6
+assert key == "user:metsayo" and len(engine.all_palettes()) == len(engine.PALETTES) + 1
 assert not (engine.SHARE / "applications").exists()
 current = engine.apply(variant=key)
 assert current["active"] and current["variant"] == key

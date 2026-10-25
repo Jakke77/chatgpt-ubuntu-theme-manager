@@ -1,5 +1,15 @@
 # ChatGPT Ubuntu Theme Manager 1.2.3
 
+## 1.2.4 · Veri Aika · Veriyö
+
+- Kuudes sisäänrakennettu paletti: lähes musta, viininpunainen ja ruusunpunainen.
+- GTK 3/4, GNOME Shell ja kuvakkeet käyttävät samoja teemasävyjä.
+- Alkuperäiset Veriyö · Otava ja Veriyö · Hiillos -taustakuvat mukana;
+  taustakuvavalinta säilyy vapaaehtoisena. Oletus on Otava.
+- Vanhemmille managereille erillinen JSON/ZIP-väripaketti.
+- Painikkeiden tummempi korostusväri täyttää nykyisen tuontimuodon tekstikontrastin.
+
+
 **Tee uusia teemoja ChatGPT:llä** kopioi koko aloituspromptin leikepöydälle ja avaa tavallisen `https://chatgpt.com/`-sivun. Odota sivun latautumista, liitä prompti **Ctrl+V**, tarkista se ja lähetä itse. Prompti tai koneen versiotiedot eivät enää ole avattavassa verkko-osoitteessa.
 
 Prompti ei myöskään enää pakota verkkokeskustelun kieleksi suomea. Se pyytää käyttämään käyttäjän tunnettua ChatGPT-oletus- tai keskustelukieltä ja kysymään kielen ensin, jos se ei ole tiedossa. Managerin käyttöliittymä säilyy suomenkielisenä.

@@ -10,7 +10,7 @@ sudo apt install python3 dpkg libgtk-3-bin desktop-file-utils
 python3 build.py
 ```
 
-The result is `dist/chatgpt-ubuntu-theme-manager_1.2.3_all.deb`.
+The result is `dist/chatgpt-ubuntu-theme-manager_1.2.4_all.deb`.
 Generated data in `package/` is ignored by Git. Building does not apply a
 theme or modify the active desktop.
 
@@ -22,6 +22,7 @@ used by the native style parser checks. Run the checks in this order:
 
 ```bash
 python3 build.py
+/usr/bin/python3 tests/veriyo_test.py
 python3 tests/theme_packs_test.py
 python3 tests/content_policy_test.py
 python3 tests/system_info_test.py
@@ -50,7 +51,7 @@ python3 tests/render_ui.py --smoke
 
 This runs the built package's program files with private XDG directories, a
 private D-Bus session and a virtual X server. Theme import, palette selection,
-apply/restore and clipboard/browser-entry handling are exercised. The 1.2.3
+apply/restore and clipboard/browser-entry handling are exercised. The 1.2.4
 workflow checks that the browser action opens exactly `https://chatgpt.com/`
 without query parameters, while both prompt actions copy the same full text.
 It also checks system-information refresh, report display and copying,

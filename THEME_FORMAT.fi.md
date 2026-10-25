@@ -15,7 +15,7 @@ pysyvät esimerkin mukaisina. Jokainen väri on `#rrggbb`.
 
 - `id`: 3–40 merkkiä, alkaa pienellä a–z-kirjaimella, sisältää vain pieniä
   a–z-kirjaimia, numeroita ja yhdysmerkkejä. Varatut nimet ovat hiili,
-  graphite, petrol, plum ja ubuntu. Uusi versio tarvitsee uuden tunnisteen.
+  graphite, petrol, plum, ubuntu ja veriyo. Uusi versio tarvitsee uuden tunnisteen.
 - `name`: 1–80, `description`: 0–600, `author`: 0–120, `license`: 1–128 ja
   `target`: 0–160 merkkiä. Teksti on yhdellä rivillä ilman ohjausmerkkejä.
 - `target`: tarkoitettu Ubuntu/GNOME-kohde; ei todistus yhteensopivuudesta.

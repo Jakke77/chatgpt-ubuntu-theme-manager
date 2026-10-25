@@ -79,7 +79,7 @@ Pakettimuoto:
 - Jos et voi tehdä ZIP-tiedostoa, toimita ladattava <id>.json samalla sisällöllä. Manageri hyväksyy myös JSON-tiedoston. Jos et voi luoda tiedostoa lainkaan, anna koko JSON yhtenä koodilohkona ja pyydä tallentamaan se .json-tiedostoksi. Älä väitä puuttuvaa tiedostoa tehdyksi.
 - Älä toimita .deb-asentajaa, .desktop-tiedostoa, omaa sovelluskuvaketta valikkoon, GUI-ohjelmaa, komentojonoa, Python-koodia, CSS-tiedostoja tai ulkoisia kuvia. Älä anna sudo-komentoja. Manageri luo GTK 3-, GTK 4-, GNOME Shell-, kuvake- ja taustakuvavärit paikallisesti Hiili/Yaru-pohjastaan.
 - Kaikki alla olevan esimerkin 11 ylimmän tason kenttää tarvitaan; muita kenttiä ei sallita. format on aina "chatgpt-ubuntu-theme" ja version on numero 1.
-- id on 3–40 merkkiä: alkaa pienellä a–z-kirjaimella ja sisältää vain pieniä a–z-kirjaimia, numeroita tai yhdysmerkkejä. Käytä uudelle teemalle yksilöllistä tunnistetta. Varatut tunnisteet ovat hiili, graphite, petrol, plum ja ubuntu.
+- id on 3–40 merkkiä: alkaa pienellä a–z-kirjaimella ja sisältää vain pieniä a–z-kirjaimia, numeroita tai yhdysmerkkejä. Käytä uudelle teemalle yksilöllistä tunnistetta. Varatut tunnisteet ovat hiili, graphite, petrol, plum, ubuntu ja veriyo.
 - name on 1–80, description 0–600, author 0–120, license 1–128 ja target 0–160 merkkiä. Ne ovat tavallista yhden rivin tekstiä ilman ohjausmerkkejä. Valitse oman uuden paletin lisenssi, esimerkiksi CC0-1.0, ja kysy tekijän nimi tai nimimerkki tarvittaessa.
 - target kertoo tarkoitetun Ubuntu/GNOME-ympäristön. Se on ohjetieto, ei väite testatusta yhteensopivuudesta.
 - accent on yksi GNOME-korostusvärin nimistä: blue, teal, green, yellow, orange, red, pink, purple, slate.

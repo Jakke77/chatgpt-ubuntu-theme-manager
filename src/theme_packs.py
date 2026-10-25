@@ -32,7 +32,7 @@ COLOR_KEYS = (
 ACCENTS = ("blue", "teal", "green", "yellow", "orange", "red", "pink", "purple", "slate")
 _FIELDS = frozenset(("format", "version", "id", "name", "description", "author",
                      "license", "target", "accent", "sample", "colors"))
-_RESERVED_IDS = frozenset(("hiili", "graphite", "petrol", "plum", "ubuntu"))
+_RESERVED_IDS = frozenset(("hiili", "graphite", "petrol", "plum", "ubuntu", "veriyo"))
 _ID = re.compile(r"[a-z][a-z0-9-]{2,39}\Z", re.ASCII)
 _HEX = re.compile(r"#[0-9a-fA-F]{6}\Z", re.ASCII)
 

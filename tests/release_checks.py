@@ -75,7 +75,7 @@ for selected in PALETTES.values():
             assert path.exists(), path
         elif path.suffix == ".svg":
             ElementTree.parse(path)
-print("PASS: SVG artwork and icon aliases for all five themes")
+print("PASS: SVG artwork and icon aliases for all six themes")
 
 fixture = max((BASE / "tests").glob("hiili-integration-*"), key=lambda p: p.stat().st_mtime)
 themes = [fixture / "share/themes" / item["theme"] for item in PALETTES.values()]
@@ -96,7 +96,7 @@ for path in json.loads(sys.argv[2]): provider.load_from_path(path)
 assert not errors, errors
 '''
     subprocess.run([sys.executable, "-c", reader, gtk_version, json.dumps(paths)], check=True)
-print("PASS: full GTK 3 themes and GTK 4 CSS for five built-ins and the imported palette")
+print("PASS: full GTK 3 themes and GTK 4 CSS for six built-ins and the imported palette")
 
 env = dict(os.environ, GI_TYPELIB_PATH="/usr/lib/gnome-shell:/usr/lib/x86_64-linux-gnu/mutter-51", LD_LIBRARY_PATH="/usr/lib/gnome-shell:/usr/lib/x86_64-linux-gnu/mutter-51")
 reader = '''import gi, sys, json
@@ -107,7 +107,7 @@ for path in json.loads(sys.argv[1]):
     assert theme.load_stylesheet(Gio.File.new_for_path(path)),path
 '''
 subprocess.run([sys.executable,"-c",reader,json.dumps([str(path / "gnome-shell/gnome-shell.css") for path in themes])],env=env,check=True)
-print("PASS: GNOME 51 accepts all five built-in and the imported full Shell stylesheets")
+print("PASS: GNOME 51 accepts all six built-in and the imported full Shell stylesheets")
 
 fixture = Path(tempfile.mkdtemp(prefix="manager-hooks-", dir=BASE / "tests"))
 log = fixture / "hooks.log"
