@@ -1,15 +1,30 @@
-# ChatGPT Ubuntu Theme Manager 1.2.3
+# ChatGPT Ubuntu Theme Manager 1.2.4
+
+## Veri Aika · Veriyö · 1.2.4
+
+Valitse managerista **Veri Aika · Veriyö** ja **Ota valittu teema käyttöön**.
+Mukana ovat lähes mustat ja viininpunaiset pinnat, ruusunpunaiset korostukset,
+sävyihin sopivat GTK-, Shell- ja kuvaketyylit sekä **Veriyö · Otava** -taustakuva.
+Taustakuva vaihtuu vain, jos **Vaihda myös taustakuva** on valittu.
+Alkuperäinen **Veriyö · Hiillos** on myös mukana teeman taustakuvakansiossa.
+Kuvat ovat Ajanlaskut ja Sää -sovelluksen alkuperäiset kuvat; Otava on niissä
+staattista kuvitusta. Päivitys säilyttää aiemmin valitun ulkoasun.
+
+Vanhemmalle managerille voi tuoda [Veriyö-väripaketin](examples/Veriyo.ctm-theme.zip)
+**Tuo teema…** -painikkeella. Se tuo värit managerin omiin kuviin; alkuperäiset
+PNG-taustakuvat kuuluvat sisäänrakennettuun 1.2.4-versioon.
+
 
 > Projekti jaetaan sellaisenaan. Käyttö on omalla vastuulla. Jatkuvaa ylläpitoa,
 > tukea tai tulevaa yhteensopivuutta ei luvata. Katso [ylläpitolinjaus](SUPPORT.md).
 
-Tumma teemanhallinta Ubuntu/GNOME-työpöydälle. Voit vaihtaa viiden valmiin
+Tumma teemanhallinta Ubuntu/GNOME-työpöydälle. Voit vaihtaa kuuden valmiin
 ulkoasun välillä ja tuoda ChatGPT:llä suunniteltuja omia väripaletteja
 samaan teemavalikoimaan. Oma teema ei tee sovellusvalikkoon uutta kuvaketta.
 
 Ohjelma on epävirallinen yhteisöprojekti, ei OpenAI:n tai Canonicalin tuote.
 
-Versio 1.2.3 avaa ChatGPT-painikkeesta tavallisen verkkosivun ja kopioi
+Versio 1.2.4 avaa ChatGPT-painikkeesta tavallisen verkkosivun ja kopioi
 valmiin promptin leikepöydälle. Liitä teksti itse **Ctrl+V**, kun sivu on
 latautunut. Prompti pyytää käyttämään käyttäjän ChatGPT-oletus- tai
 keskustelukieltä ja kysymään kielen ensin, jos se ei ole tiedossa.
@@ -20,7 +35,7 @@ säilyvät mukana. Katso [sisältölinjaus ja sen rajat](CONTENT_POLICY.md).
 ## Asennus ja päivitys klikkaamalla
 
 1. Sulje aiemmin avoinna oleva Hiili- tai Theme Manager -ikkuna.
-2. Avaa `chatgpt-ubuntu-theme-manager_1.2.3_all.deb` kaksoisnapsauttamalla sitä.
+2. Avaa `chatgpt-ubuntu-theme-manager_1.2.4_all.deb` kaksoisnapsauttamalla sitä.
 3. Valitse paketin asennusohjelmassa **Asenna** tai **Päivitä** ja anna pyydetty salasana.
 4. Avaa sovellusvalikosta **ChatGPT Ubuntu Theme Manager**.
 
@@ -206,8 +221,8 @@ chatgpt-ubuntu-theme-manager --print-prompt new --prompt-target 'Ubuntu 26.04 / 
 
 ## Lähdekoodi ja jakaminen
 
-Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.3-source.tar.gz`.
-Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.3-jakopaketti.zip`.
+Lähdekoodi on paketissa `chatgpt-ubuntu-theme-manager-1.2.4-source.tar.gz`.
+Koko jakopaketti on `chatgpt-ubuntu-theme-manager-1.2.4-jakopaketti.zip`.
 Ohjelma ja sen omat pohjat ovat GPL 3 tai uudempi -lisenssillä.
 Metsäyö-esimerkkipaletti on CC0-1.0-lisenssillä. Omassa paletissa lisenssi
 ja tekijä ilmoitetaan sen JSON-tiedoissa.
@@ -220,7 +235,7 @@ projektin `dist/`-kansioon. Rakennus tarvitsee Pythonin lisäksi
 
 ## Julkaisun tarkistukset
 
-Version 1.2.3 tarkistuksissa läpäisivät 53 yksikkötestiä sekä GTK 3-, GTK 4-,
+Version 1.2.4 tarkistuksissa läpäisivät 53 yksikkötestiä sekä GTK 3-, GTK 4-,
 GNOME Shell -tyyli- ja asennuskoukkutarkistukset. Rakennetun paketin yksityinen
 graafinen koe varmisti puhtaan ChatGPT-osoitteen ja kokonaisen leikepöytäpromptin
 konetietoineen, toisen kohteen käsittelyn sekä kopion säilymisen selaimen
@@ -229,10 +244,10 @@ Kieliohje tarkistettiin kaikista kolmesta promptista. Ulkoinen selain ja
 tiedostovalitsin korvattiin hallituilla vastauksilla; ChatGPT:hen ei lähetetty
 viestiä eikä mallin kielivalintaa testattu.
 
-Version 1.2.3 muutokset ja tarkistusten rajaus ovat tiedostossa
+Version 1.2.4 muutokset ja tarkistusten rajaus ovat tiedostossa
 [RELEASE_NOTES.md](RELEASE_NOTES.md). Alla säilytetään aiempien julkaisujen
 todennetut tarkistukset. Aiemmissa versioissa prompti valmisteltiin myös
-verkko-osoitteen kyselyyn; versiosta 1.2.3 alkaen se välitetään vain
+verkko-osoitteen kyselyyn; versiosta 1.2.4 alkaen se välitetään vain
 leikepöydän kautta käyttäjän itse liitettäväksi.
 
 Version 1.2.2 tarkistukset Ubuntu 26.10 / GNOME 51 -ympäristössä:

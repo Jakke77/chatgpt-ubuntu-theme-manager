@@ -60,7 +60,7 @@ def step():
                 pass
             else:
                 raise AssertionError("GUI import accepted rejected metadata")
-            assert len(application.theme_buttons) == 5
+            assert len(application.theme_buttons) == 6
             errors = []
             original_policy_error = application.policy_error
             application.policy_error = lambda error: errors.append(error)

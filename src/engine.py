@@ -169,13 +169,13 @@ def theme_targets(wallpaper=True, variant="hiili"):
         ("org.gnome.shell.extensions.user-theme", "name", selected["theme"]),
     ]
     if wallpaper:
-        uri = (variant_data(variant) / "wallpaper.svg").as_uri()
+        uri = (variant_data(variant) / selected.get("wallpaper", "wallpaper.svg")).as_uri()
         targets += [
             ("org.gnome.desktop.background", "picture-uri", uri),
             ("org.gnome.desktop.background", "picture-uri-dark", uri),
             ("org.gnome.desktop.background", "picture-options", "zoom"),
-            ("org.gnome.desktop.background", "primary-color", "#090b0e"),
-            ("org.gnome.desktop.background", "secondary-color", "#10171a"),
+            ("org.gnome.desktop.background", "primary-color", "#070508" if variant == "veriyo" else "#090b0e"),
+            ("org.gnome.desktop.background", "secondary-color", "#160b12" if variant == "veriyo" else "#10171a"),
         ]
     return targets
 

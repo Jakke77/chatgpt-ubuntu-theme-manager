@@ -1,7 +1,7 @@
 """Shared palette catalog for the GTK, Shell, icon and wallpaper variants."""
 import re
 
-VERSION = "1.2.3"
+VERSION = "1.2.4"
 APP_NAME = "ChatGPT Ubuntu Theme Manager"
 PALETTES = {
     "hiili": {"name": "Hiili / Musta", "theme": "Hiili", "accent": "teal", "sample": "#11151a",
@@ -18,6 +18,15 @@ PALETTES = {
     "ubuntu": {"name": "Ubuntu Dark", "theme": "Hiili-UbuntuDark", "accent": "orange", "sample": "#c6532d",
                "description": "Ubuntun oranssi ja munakoiso tummana Hiili-tulkintana",
                "colors": {"#11151a": "#181418", "#0b0e12": "#100d11", "#171c22": "#282029", "#151a20": "#211a23", "#1e252e": "#342935", "#191f27": "#2d232e", "#1c232c": "#352a37", "accent_bg": "#b64a26", "accent_light": "#f3b597", "folder_top": "#8d512f", "folder_bottom": "#4d2d25", "folder_stroke": "#bb805a", "glyph": "#f1c5a6"}},
+
+    "veriyo": {"name": "Veri Aika · Veriyö", "theme": "Hiili-Veriyo", "accent": "pink", "sample": "#f0788b",
+               "description": "Veri Ajan lähes musta, viininpunainen ja ruusunpunainen Otava-taivaan alla",
+               "wallpaper": "veriyo-otava.png",
+               "colors": {"#11151a": "#070508", "#0b0e12": "#050306", "#171c22": "#160b12",
+                          "#151a20": "#10080d", "#1e252e": "#25121c", "#191f27": "#1c0e16",
+                          "#1c232c": "#2d1722", "accent_bg": "#92344d", "accent_light": "#f0788b",
+                          "folder_top": "#56303c", "folder_bottom": "#160b12", "folder_stroke": "#b8657a",
+                          "glyph": "#f5eaf0"}},
 }
 
 
