@@ -1,0 +1,27 @@
+{
+  "format": "chatgpt-ubuntu-theme",
+  "version": 1,
+  "id": "veriyo-palette",
+  "name": "Veri Aika · Veriyö",
+  "description": "Veri Ajan lähes musta, viininpunainen ja ruusunpunainen Otava-taivaan alla",
+  "author": "Jakke77",
+  "license": "GPL-3.0-or-later",
+  "target": "Ubuntu / GNOME",
+  "accent": "pink",
+  "sample": "#f0788b",
+  "colors": {
+    "#11151a": "#070508",
+    "#0b0e12": "#050306",
+    "#171c22": "#160b12",
+    "#151a20": "#10080d",
+    "#1e252e": "#25121c",
+    "#191f27": "#1c0e16",
+    "#1c232c": "#2d1722",
+    "accent_bg": "#92344d",
+    "accent_light": "#f0788b",
+    "folder_top": "#56303c",
+    "folder_bottom": "#160b12",
+    "folder_stroke": "#b8657a",
+    "glyph": "#f5eaf0"
+  }
+}

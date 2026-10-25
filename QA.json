@@ -1,0 +1,12 @@
+{
+  "version": "1.2.4",
+  "palettes": 6,
+  "pure_unit_tests": 52,
+  "veriyo_asset_tests": 3,
+  "package_contents_and_permissions": true,
+  "original_wallpapers_preserved": true,
+  "gtk4_gui_tested": false,
+  "limitation": "GTK4 typelib and GNOME/Yaru desktop unavailable in this Debian build environment",
+  "sha256": "ad6d9444a06025353429fccd107f94b9ff2ac71e3a73bdca9c0d9a7dd47beb09",
+  "source_commit": "142bffaff76d5b8c67e92351282a348d470560b2"
+}
